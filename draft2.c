@@ -3,9 +3,80 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char	*get_path()
+int	ft_strnstr(const char *big, const char *little, int len)
 {
-	
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while ((j + i) < len && (little[i]) && (big[j]))
+	{
+		if (little[i] == big[j + i])
+			i++;
+		else
+		{
+			i = 0;
+			j++;
+		}
+	}
+	if (little[i] == '\0')
+		return (1);
+	else
+		return (0);
+}
+
+int	ft_strlen(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	int		len_s;
+	int		i;
+
+	i = 0;
+	len_s = ft_strlen(s);
+	dup = malloc((len_s + 1) * sizeof(const char));
+	if (dup == NULL)
+		return (NULL);
+	while (s[i])
+	{
+		dup[i] = ((char *)s)[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
+char	*get_path(char **envp)
+{
+	int		i;
+	int		check;
+	char	*path;
+
+	i = 0;
+	check = 0;
+	while (envp[i])
+	{
+		check = ft_strnstr((const char *)envp[i], "PATH=", 5);
+		while (check != 1)
+			i++;		
+	}
+	if (!envp[i])
+	{	
+		perror("ERROR can't get path");
+		exit (EXIT_FAILURE);
+	}
+	else
+		path = dup((const char *)envp[i]);
 }
 
 void	child_process(int *fd, char **av, char **envp)
@@ -22,7 +93,7 @@ void	child_process(int *fd, char **av, char **envp)
 	dup2(in_file, 0);
 	dup2(fd[1], 1);
 	close(fd[0]);
-	path = get_path();
+	path = get_path(envp);
 	execve(path, &av[2], envp);
 }
 
