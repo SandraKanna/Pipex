@@ -21,7 +21,10 @@ int	ft_strnstr(const char *big, const char *little, int len)
 		}
 	}
 	if (little[i] == '\0')
+	{
+		//printf("%s", big + j);
 		return (1);
+	}
 	else
 		return (0);
 }
@@ -49,7 +52,7 @@ char	*ft_strdup(const char *s)
 		return (NULL);
 	while (s[i])
 	{
-		dup[i] = ((char *)s)[i];
+		dup[i] = ((const char *)s)[i];
 		i++;
 	}
 	dup[i] = '\0';
@@ -64,11 +67,13 @@ char	*get_path(char **envp)
 
 	i = 0;
 	check = 0;
-	while (envp[i])
+	path = NULL;
+	while (envp[i] && check != 1)
 	{
 		check = ft_strnstr((const char *)envp[i], "PATH=", 5);
-		while (check != 1)
-			i++;		
+		if (check)
+			break;
+		i++;
 	}
 	if (!envp[i])
 	{	
@@ -76,7 +81,9 @@ char	*get_path(char **envp)
 		exit (EXIT_FAILURE);
 	}
 	else
-		path = dup((const char *)envp[i]);
+		path = ft_strdup((const char *)envp[i]);
+	//fprintf(stderr, "TOTO %s\n", path);
+	return (path);
 }
 
 void	child_process(int *fd, char **av, char **envp)
@@ -100,6 +107,7 @@ void	child_process(int *fd, char **av, char **envp)
 void	parent_process(int *fd, char **av, char **envp)
 {
 	int	out_file;
+	char	*path;
 
 	out_file = open(av[4], O_CREAT | O_RDWR);
 	if (out_file < 0)
@@ -110,6 +118,7 @@ void	parent_process(int *fd, char **av, char **envp)
 	dup2(out_file, 1);
 	dup2(fd[0], 0);
 	close(fd[1]);
+	path = get_path(envp);
 	execve(path, &av[2], envp);
 }
 
@@ -118,7 +127,6 @@ int	main(int argc, char **argv, char **envp)
 	int 	fd[2];
 	pid_t	p_id;
 
-	p_id = fork(); //create (fork) a new process (child = commandes) out of the calling process
 	pipe(fd); //create Pipe
 	//check for correct number of arguments
 	if (argc == 5)
@@ -129,12 +137,13 @@ int	main(int argc, char **argv, char **envp)
 			perror("Error when creating pipe");
 			exit (EXIT_FAILURE);
 		}
+		p_id = fork(); //create (fork) a new process (child = commandes) out of the calling process
 		if (p_id < 0)
 		{	
 			perror("Error creating child1 process with fork");
 			exit (EXIT_FAILURE);
 		}
-		if (!p_id) // same than p_id == 0
+		if (p_id == 0)
 			child_process(fd, argv, envp);
 		//waitpid
 		parent_process(fd, argv, envp);
