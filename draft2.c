@@ -1,60 +1,77 @@
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+char	*get_path()
+{
+	
+}
+
+void	child_process(int *fd, char **av, char **envp)
+{
+	int		in_file;
+	char	*path;
+
+	in_file = open(av[1], O_RDONLY);
+	if (in_file < 0)
+	{	
+		perror("Error opening in_file");
+		exit (EXIT_FAILURE);
+	}
+	dup2(in_file, 0);
+	dup2(fd[1], 1);
+	close(fd[0]);
+	path = get_path();
+	execve(path, &av[2], envp);
+}
+
+void	parent_process(int *fd, char **av, char **envp)
+{
+	int	out_file;
+
+	out_file = open(av[4], O_CREAT | O_RDWR);
+	if (out_file < 0)
+	{	
+		perror("Error opening out_file");
+		exit (EXIT_FAILURE);
+	}
+	dup2(out_file, 1);
+	dup2(fd[0], 0);
+	close(fd[1]);
+	execve(path, &av[2], envp);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
-	
+	int 	fd[2];
+	pid_t	p_id;
+
+	p_id = fork(); //create (fork) a new process (child = commandes) out of the calling process
+	pipe(fd); //create Pipe
 	//check for correct number of arguments
-	if (argc != 5)
-	{	
-		ft_printf("Please enter the right parameters: ");
-		exit (EXIT_FAILURE);
-	}
-
-	//create Pipe
-
-	//open infile and create (fork) a new process (child = commandes) out of the calling process (parent = main)
-	int in_file;
-	pid_t   child1
-
-	in_file = open(argv[1], O_RDONLY);
-	child1 = fork();
-	if (child1 < 0)
-	{	
-		perror("Error creating child1 process with fork")
-		exit (EXIT_FAILURE)
-	}
-	if (child1 == 0)
+	if (argc == 5)
 	{
-		//execve
-		//int execve(const char *pathname, char *const argv[], char *const envp[]);
-	}
-
-	//open outfile and create (fork) a new process (child = commandes) out of the calling process (parent = main)
-	int out_file;
-	pid_t   child2
-	
-	out_file = open(argv[4], O_CREAT, O_WRONLY);
-	child2 = fork();
-	if (child2 < 0)
-	{	
-		perror("Error creating child2 process with fork")
-		exit (EXIT_FAILURE)
-	}
-
-	//handle error
-
-	if (child)
-	{
-		//redirect stdout to pipe
-		//execute first command
+		//check pipe errors
+		if (pipe(fd) < 0)
+		{	
+			perror("Error when creating pipe");
+			exit (EXIT_FAILURE);
+		}
+		if (p_id < 0)
+		{	
+			perror("Error creating child1 process with fork");
+			exit (EXIT_FAILURE);
+		}
+		if (!p_id) // same than p_id == 0
+			child_process(fd, argv, envp);
+		//waitpid
+		parent_process(fd, argv, envp);
 	}
 	else
-	{
-		//redirect stdin from pipe
-		//execute second command
+	{	
+		perror("Please enter the right parameters: file1 cmd1 cmd2 file2");
+		exit (EXIT_FAILURE);
 	}
-	//close files and pipes
-	// wait for child processes
 	return (0);
 }
