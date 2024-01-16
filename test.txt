@@ -4,5 +4,3 @@ ready
 to go
 now
 hello world
-
-
