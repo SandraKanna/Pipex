@@ -2,7 +2,7 @@ NAME = pipex
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3
 
-CFILES = src/pipex.c utils/ft_split.c \
+CFILES = src/pipex.c utils/ft_split.c utils/parsing.c \
 		utils/auxiliar.c utils/utils.c
 
 OBJ = $(CFILES:.c=.o)

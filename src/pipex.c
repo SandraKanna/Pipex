@@ -12,70 +12,6 @@
 
 #include "pipex.h"
 
-char	*merge_args(char **command_args)
-{
-
-}
-
-char	**parse_cmd(char *command_str)
-{
-	char	**split_command;
-	char	*final_command;
-	char	quote;
-	int		start;
-	int		i;
-	int		j;
-
-	i = 0;
-	start = 0;
-	split_command = ft_split((char const *)command_str, ' ');
-	while (split_command[i])
-	{
-		j = 0;
-		while(split_command[i][j])
-		{
-			if (split_command[i][j] == 39 || split_command[i][j] == 34)
-				start = 1;
-			if (start == 1 && (split_command[i][j] == 39 || split_command[i][j] == 34))
-				final_command = merge_args(split_command);
-			j++;
-		}
-	}
-
-	return (final_command);
-}
-
-char	*parse_path(char *command, char **envp)
-{
-	char	*path_var;
-	char	**split_path;
-	char	*partial_path;
-	char	*full_path;
-	int		i;
-
-	path_var = get_path_var(envp);
-	if (path_var == NULL)
-		error_handling(ERROR_PATH);
-	split_path = ft_split((char const *)path_var, ':');
-	i = 0;
-	while (split_path[i])
-	{
-		partial_path = ft_strjoin(split_path[i], "/");
-		full_path = ft_strjoin(partial_path, command);
-		free(partial_path);
-		if (access(full_path, F_OK) == 0)
-		{
-			i = 0;
-			while (split_path[i])
-				free(split_path[i++]);
-			free(split_path);
-			return (full_path);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
 void	child_process(int *fd, char **av, char **envp)
 {
 	int		in_file;
@@ -88,7 +24,8 @@ void	child_process(int *fd, char **av, char **envp)
 	dup2(in_file, 0);
 	dup2(fd[1], 1);
 	close(fd[0]);
-	cmd1_args = parse_cmd(av[2]);
+	//cmd1_args = parse_cmd(av[2]);
+	cmd1_args = ft_split((const char *)av[2], ' ');
 	cmd1_path = parse_path(cmd1_args[0], envp);
 	if (!execve(cmd1_path, cmd1_args, envp))
 	{	
@@ -112,7 +49,8 @@ void	parent_process(int *fd, char **av, char **envp)
 	dup2(out_file, 1);
 	dup2(fd[0], 0);
 	close(fd[1]);
-	cmd2_args = parse_cmd(av[3]);
+	//cmd2_args = parse_cmd(av[3]);
+	cmd2_args = ft_split((const char *)av[3], ' ');
 	cmd2_path = parse_path(cmd2_args[0], envp);
 	if (!execve(cmd2_path, cmd2_args, envp))
 	{
