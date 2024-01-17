@@ -12,53 +12,30 @@
 
 #include "../src/pipex.h"
 
-int	ft_strnstr(const char *big, const char *little, int len)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int	i;
-
-	i = 0;
-	if (little[0] == '\0')
-		return (0);
-	while ((little[i]) && (big[i]) && i < len)
-	{
-		if (little[i] != big[i])
-			return (0);
-		i++;
-	}
-	if (little[i] == '\0')
-		return (1);
-	else
-		return (0);
-}
-
-int	ft_strlen(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*dup;
-	int		len_s;
+	char	*joint;
+	int		len_s1;
+	int		len_s2;
 	int		i;
+	int		j;
 
 	i = 0;
-	len_s = ft_strlen(s);
-	dup = malloc((len_s + 1) * sizeof(const char));
-	if (dup == NULL)
+	j = 0;
+	if (!s1 ||!s2)
 		return (NULL);
-	while (s[i])
-	{
-		dup[i] = ((const char *)s)[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	joint = malloc((len_s1 + len_s2 + 1) * sizeof(char));
+	if (joint == NULL)
+		return (NULL);
+	while (s1[j])
+		joint [i++] = ((char *)s1)[j++];
+	j = 0;
+	while (s2[j])
+		joint[i++] = ((char *)s2)[j++];
+	joint[i] = '\0';
+	return (joint);
 }
 
 char	*get_path_var(char **envp)
@@ -79,10 +56,11 @@ char	*get_path_var(char **envp)
 		}
 		i++;
 	}
-	if (path == NULL)
-	{	
-		perror("ERROR: PATH environment variable not found\n");
-		exit (EXIT_FAILURE);
-	}
 	return (path);
+}
+
+int	error_handling(char *error_msg)
+{
+	perror(error_msg);
+	exit (EXIT_FAILURE);
 }

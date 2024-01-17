@@ -50,7 +50,7 @@ static char	**free_split(char **split, int h)
 }
 
 static char	**fill_args(char **split, char const *s, size_t args, char c)
-{	
+{
 	size_t	h;
 	size_t	len_args;
 
