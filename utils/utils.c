@@ -6,20 +6,20 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/16 14:43:33 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/17 14:08:10 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../src/pipex.h"
 
 int	ft_strnstr(const char *big, const char *little, int len)
 {
 	int	i;
 
 	i = 0;
-    if (little[0] == '\0') //if there's no path, return 0
-        return 0;
-	while ((little[i]) && (big[i]) && i < len) //check for "PATH=" only at the beginning of big
+	if (little[0] == '\0')
+		return (0);
+	while ((little[i]) && (big[i]) && i < len)
 	{
 		if (little[i] != big[i])
 			return (0);
@@ -75,7 +75,7 @@ char	*get_path_var(char **envp)
 		if (ft_strnstr((const char *)envp[i], "PATH=", 5))
 		{
 			path = ft_strdup((const char *)envp[i] + 5);
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -84,7 +84,5 @@ char	*get_path_var(char **envp)
 		perror("ERROR: PATH environment variable not found\n");
 		exit (EXIT_FAILURE);
 	}
-	//fprintf(stderr, "TOTO %s\n", path);
 	return (path);
 }
-

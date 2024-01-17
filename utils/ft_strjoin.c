@@ -6,11 +6,11 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 18:00:10 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/16 15:15:25 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/17 12:21:26 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../src/pipex.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
