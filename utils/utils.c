@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/17 14:08:10 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/18 18:25:40 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		joint[i++] = ((char *)s2)[j++];
 	joint[i] = '\0';
 	return (joint);
+}
+
+int	has_quotes(char const *str)
+{
+	int	i;
+	int	quotes;
+
+	i = 0;
+	quotes = 0;
+	while (str[i])
+	{
+		if (str[i] == 34 || str[i] == 39)
+			quotes++;
+		i++;
+	}
+	if (quotes % 2 == 0)
+		return (1);
+	else if (quotes == 0)
+		return (0);
+	return (-1);
 }
 
 char	*get_path_var(char **envp)
