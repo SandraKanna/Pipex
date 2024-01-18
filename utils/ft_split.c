@@ -122,7 +122,6 @@ char	**ft_split(char const *s, char c)
 	if (valid_quotes < 0)
 		return (NULL);
 	args = count_args(s, c, valid_quotes);
-	printf("%li\n", args);
 	split = malloc ((args + 1) * sizeof(char *));
 	if (!split)
 		return (NULL);

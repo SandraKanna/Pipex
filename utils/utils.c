@@ -79,8 +79,17 @@ char	*get_path_var(char **envp)
 	return (path);
 }
 
-int	error_handling(char *error_msg)
+int	error_handling(t_error_code error_code)
 {
-	perror(error_msg);
-	exit (EXIT_FAILURE);
+	const char	*error_msg[] =
+	{
+		ERROR_ARGS, ERROR_EXECVE, ERROR_FORK, ERROR_INFILE,
+		ERROR_OUTFILE, ERROR_PIPE, ERROR_WAIT, ERROR_MEM
+	};
+	
+	perror(error_code[error_msg]);
+	if (error_code == EC_EXECVE)
+		exit(127);
+	else
+		exit(EXIT_FAILURE);
 }
