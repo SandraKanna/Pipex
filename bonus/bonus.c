@@ -11,3 +11,9 @@
 /* ************************************************************************** */
 
 #include "bonus.h"
+
+int	main(int ac, char **av, char **envp)
+{
+	t_pipex_bonus	pipex_bonus
+	if ()
+}

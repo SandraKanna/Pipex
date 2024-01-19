@@ -20,7 +20,7 @@ char	*parse_path(char *path_var, char *command)
 	int		i;
 
 	if (check_abs_path(command))
-		return (ft_strdup(command));
+		return (command);
 	split_path = ft_split((char const *)path_var, ':');
 	i = 0;
 	while (split_path[i])
