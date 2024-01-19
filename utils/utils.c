@@ -70,6 +70,11 @@ char	*get_path_var(char **envp)
 		if (ft_strnstr((const char *)envp[i], "PATH=", 5))
 		{
 			path = ft_strdup((const char *)envp[i] + 5);
+			if (!path)
+			{
+				perror("Couldn't find path");
+				exit (EXIT_FAILURE);
+			}
 			break ;
 		}
 		i++;

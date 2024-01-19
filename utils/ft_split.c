@@ -21,7 +21,7 @@ static int	count_args(char const *s, char c, int q)
 	args = 0;
 	while (s[i])
 	{
-		if (s[i] == c)
+		while (s[i] == c)
 			i++;
 		if (q && (s[i] == 34 || s[i] == 39))
 		{
@@ -132,7 +132,7 @@ char	**ft_split(char const *s, char c)
 
 /*int main(void)
 {
-	char *s = "awk {count++} END {print count}";
+	char *s = "sed    's/And/But/'";
 	char c = 32;
 	char **split;
 	int	i;

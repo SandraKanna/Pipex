@@ -1,6 +1,6 @@
 NAME = pipex
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 CFILES = src/pipex.c utils/ft_split.c \
 		utils/auxiliar.c utils/utils.c
@@ -23,4 +23,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
