@@ -61,13 +61,11 @@ int	has_quotes(char const *str)
 char	*get_path_var(char **envp)
 {
 	int		i;
-	int		check;
 	char	*path;
 
 	i = 0;
-	check = 0;
 	path = NULL;
-	while (envp[i] && check != 1)
+	while (envp[i])
 	{
 		if (ft_strnstr((const char *)envp[i], "PATH=", 5))
 		{
@@ -79,14 +77,22 @@ char	*get_path_var(char **envp)
 	return (path);
 }
 
+int	check_abs_path(char *cmd)
+{
+	if (cmd[0] == '/')
+	{
+		if (access(cmd, X_OK) == 0)
+			return (1);
+	}
+	return (0);
+}
+
 int	error_handling(t_error_code error_code)
 {
-	const char	*error_msg[] =
-	{
-		ERROR_ARGS, ERROR_EXECVE, ERROR_FORK, ERROR_INFILE,
-		ERROR_OUTFILE, ERROR_PIPE, ERROR_WAIT, ERROR_MEM
-	};
-	
+	const char	*error_msg[] = {ERROR_ARGS, ERROR_EXECVE,
+		ERROR_FORK, ERROR_INFILE, ERROR_OUTFILE,
+		ERROR_PIPE, ERROR_WAIT, ERROR_MEM};
+
 	perror(error_code[error_msg]);
 	if (error_code == EC_EXECVE)
 		exit(127);

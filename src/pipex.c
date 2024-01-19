@@ -19,6 +19,8 @@ char	*parse_path(char *path_var, char *command)
 	char	*full_path;
 	int		i;
 
+	if (check_abs_path(command))
+		return (command);
 	split_path = ft_split((char const *)path_var, ':');
 	i = 0;
 	while (split_path[i])

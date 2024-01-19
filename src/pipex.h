@@ -44,6 +44,7 @@ int		ft_strnstr(const char *big, const char *little, int len);
 int		ft_strlen(const char *str);
 char	*ft_strdup(const char *s);
 char	*get_path_var(char **envp);
+int		check_abs_path(char *cmd);
 char	*parse_path(char *path_var, char *command);
 int		has_quotes(char const *str);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
