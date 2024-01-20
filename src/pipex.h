@@ -19,9 +19,9 @@
 # include <stdio.h>
 # include <sys/wait.h>
 
-# define ERROR_ARGS "Please enter the right parameters: file1 cmd1 cmd2 file2"
-# define ERROR_PIPE "Cannot create pipe"
-# define ERROR_FORK "Error creating child1 process with fork"
+# define ERROR_ARGS "Please enter the right parameters"
+# define ERROR_PIPE "Unable to create pipe"
+# define ERROR_FORK "Error creating child1 process"
 # define ERROR_WAIT "Waitpid returned error"
 # define ERROR_INFILE "Unable to open in_file"
 # define ERROR_OUTFILE "Unable to open or create out_file"

@@ -41,7 +41,7 @@ char	*parse_path(char *path_var, char *command)
 	return (NULL);
 }
 
-void	child_process(int *fd, char **av, char **envp)
+void	child_process(int *fd, char **av, char **envp, int index)
 {
 	int		in_file;
 	char	*cmd1_path;
@@ -52,7 +52,7 @@ void	child_process(int *fd, char **av, char **envp)
 	in_file = open(av[1], O_RDONLY);
 	if (in_file < 0)
 		error_handling(EC_INFILE);
-	cmd1_args = ft_split((const char *)av[2], ' ');
+	cmd1_args = ft_split((const char *)av[index], ' ');
 	path_var = get_path_var(envp);
 	cmd1_path = parse_path(path_var, cmd1_args[0]);
 	if (cmd1_path == NULL)
@@ -69,7 +69,7 @@ void	child_process(int *fd, char **av, char **envp)
 	}
 }
 
-void	parent_process(int *fd, char **av, char **envp)
+void	parent_process(int *fd, int ac, char **av, char **envp)
 {
 	int		out_file;
 	char	*cmd2_path;
@@ -77,23 +77,23 @@ void	parent_process(int *fd, char **av, char **envp)
 	char	*path_var;
 
 	close(fd[1]);
-	out_file = open(av[4], O_RDWR | O_TRUNC | O_CREAT, 0777);
+	out_file = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (out_file < 0)
 		error_handling(EC_OUTFILE);
-	cmd2_args = ft_split((const char *)av[3], ' ');
+	cmd2_args = ft_split((const char *)av[ac - 2], ' ');
 	path_var = get_path_var(envp);
 	cmd2_path = parse_path(path_var, cmd2_args[0]);
 	if (cmd2_path == NULL)
 		error_handling(EC_EXECVE);
 	dup2(out_file, 1);
 	dup2(fd[0], 0);
+	close(fd[0]);
 	if (execve(cmd2_path, cmd2_args, envp) == -1)
 	{
 		free(cmd2_args);
 		free(cmd2_path);
 		free(path_var);
 		close(out_file);
-		close(fd[0]);
 		error_handling(EC_EXECVE);
 	}
 }
@@ -102,7 +102,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	p_id;
-	int		wstatus;
 
 	if (argc != 5)
 		error_handling(EC_ARGS);
@@ -112,13 +111,13 @@ int	main(int argc, char **argv, char **envp)
 	if (p_id < 0)
 		error_handling(EC_FORK);
 	else if (p_id == 0)
-		child_process(fd, argv, envp);
+		child_process(fd, argv, envp, 2);
 	else
 	{
-		if (waitpid(p_id, &wstatus, 0) == -1)
+		if (waitpid(p_id, NULL, 0) == -1)
 			error_handling(EC_WAIT);
 		close(fd[1]);
-		parent_process(fd, argv, envp);
+		parent_process(fd, argc, argv, envp);
 		close(fd[0]);
 	}
 	return (0);
