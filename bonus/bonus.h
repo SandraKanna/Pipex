@@ -42,7 +42,7 @@ typedef enum e_error_code_bonus
 }	t_error_code_bonus;
 
 int		ft_strcmp(const char *s1, const char *s2);
-void		init_here_doc(t_pipex_bonus *b_struc, char **av);
+void	init_here_doc(t_pipex_bonus *b_struc, char **av);
 char	*get_next_line(int fd);
 void	free_all(t_lst **lst);
 t_lst	*new_elem(char *buf, int bytes);
