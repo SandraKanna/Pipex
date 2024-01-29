@@ -1,82 +1,114 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   bonus.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/19 17:28:59 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/29 15:04:11 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus.h"
 
+//https://github.com/mcombeau/pipex
 
+// for err TO: GNL function to read to *fd (sent by child) until theres no more to read (buff = NULL)
+// or we've reached Buffer_Size (strlen(buff)> buffer size)
 
-int	classic_exec(t_pipex_bonus *b_struc, char **av, char **env)
+char parse_command()
+{
+	char	*cmd1_path;
+	char	**cmd1_args;
+	char	*path_var;
+	
+	cmd1_args = ft_split((const char *)av[index], ' ');
+	path_var = get_path_var(envp);
+	cmd1_path = parse_path(path_var, cmd1_args[0]);
+	if (cmd1_path == NULL)
+		error_handling(EC_EXECVE);
+}
+
+void	exec()
+{
+	
+}
+
+void	classic_exec(t_pipex_bonus *bonus, char **av, char **env)
+{
+	int		i;
+	
+	i = 0;
+	while (i < bonus->cmd_count)
+	{
+		bonus->pids[i] = fork();
+		if (bonus->pids[i] < 0)
+			error_handling(EC_FORK);
+		else if (bonus->pids[i] == 0)
+		{
+
+		//	exec(bonus->pids[i], av, env, i);
+		}
+	}
+	if (waitpid(bonus->pids[i], NULL, 0) == -1)
+		//error_handling(EC_WAIT);
+}
+
+void	create_pipes(t_pipex_bonus *bonus)
 {
 	int	i;
 
 	i = 0;
-	while (i < b_struc->cmd_count - 1)
+	while (i < bonus->cmd_count - 1)
 	{
-		if (pipe(b_struc->pipe_fd[i]) < 0)
+		if (pipe(bonus->pipe_fd[i]) < 0)
+		{
+			clean_stuct(?);
 			error_handling(EC_PIPE);
+		}
 		i++;
 	}
-	i = 0;
-	while (i < b_struc->cmd_count)
-	{
-		b_struc->pids[i] = fork();
-		if (b_struc->pids[i] < 0)
-			error_handling(EC_FORK);
-		else if (b_struc->pids[i] == 0)
-			child_process(b_struc->pids[i], av, env, i);
-	}
-
-	if (waitpid(b_struc->pids[i], NULL, 0) == -1)
-		error_handling(EC_WAIT);
 }
 
-void	init_struct(t_pipex_bonus *b_struc, int ac, char **av, int here)
+void	init_struct(t_pipex_bonus *bonus, int ac, char **av, int here)
 {
 	int	i;
 
 	i = 0;
 	if (here)
 	{
-		b_struc->cmd_count = ac - 4;
-		init_here_doc(b_struc, av);
+		bonus->cmd_count = ac - 4;
+		init_here_doc(bonus, av);
 	}
 	else
-		b_struc->cmd_count = ac - 3;
-	b_struc->pipe_fd = malloc (sizeof(int *) * (b_struc->cmd_count - 1));
-	b_struc->pids = malloc (sizeof(pid_t) * (b_struc->cmd_count));
-	if (!b_struc->pipe_fd || !b_struc->pids)
+		bonus->cmd_count = ac - 3;
+	bonus->pipe_fd = malloc (sizeof(int *) * (bonus->cmd_count - 1));
+	bonus->pids = malloc (sizeof(pid_t) * (bonus->cmd_count));
+	if (!bonus->pipe_fd || !bonus->pids)
 		error_handling(EC_PIPE);
-	while (i < b_struc->cmd_count - 1)
+	while (i < bonus->cmd_count - 1)
 	{
-		b_struc->pipe_fd[i] = malloc (sizeof(int) * 2);
-		if (!b_struc->pipe_fd[i])
+		bonus->pipe_fd[i] = malloc (sizeof(int) * 2);
+		if (!bonus->pipe_fd[i])
 			error_handling(EC_PIPE);
 		i++;
 	}
-	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	t_pipex_bonus	pipex_bonus;
+	t_pipex_bonus	bonus;
 
 	if (ac < 5)
 		error_handling(EC_ARGS);
-	pipex_bonus.here_doc = (ft_strcmp(av[1], "here_doc") == 0);
-	init_struct(&pipex_bonus, ac, av, pipex_bonus.here_doc);
-	if (pipex_bonus.here_doc)
+	bonus.here_doc = (ft_strcmp(av[1], "here_doc") == 0);
+	init_struct(&bonus, ac, av, bonus.here_doc);
+	create_pipes(&bonus);
+	if (bonus.here_doc)
 		here_doc_exec();
 	else
-		classic_exec(&pipex_bonus, ac, av);
-	clean_stuct();
+		classic_exec(&bonus, av, envp);
+	clean_stuct(?);
 	return (0);
 }

@@ -6,13 +6,13 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:12:39 by skanna            #+#    #+#             */
-/*   Updated: 2023/11/27 13:42:25 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/29 13:08:19 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../bonus/bonus.h"
 
-void	free_all(t_lst **lst)
+static void	free_all(t_lst **lst)
 {
 	t_lst	*temp;
 

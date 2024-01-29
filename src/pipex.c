@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/29 12:05:14 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/29 13:14:52 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ char	*parse_path(char *path_var, char *command)
 	return (NULL);
 }
 
-// for err TO: GNL function to read to *fd (sent by child) until theres no more to read (buff = NULL)
-// or we've reached Buffer_Size (strlen(buff)> buffer size)
 void	child_process(int *fd, char **av, char **envp, int index)
 {
 	int		in_file;
@@ -60,8 +58,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 	cmd1_path = parse_path(path_var, cmd1_args[0]);
 	if (cmd1_path == NULL)
 		error_handling(EC_EXECVE);
-	dup2(in_file, 0);
-	//GNL to *fd
+	dup2(in_file, 0)
 	dup2(fd[1], 1);
 	close(fd[1]);
 	if (execve(cmd1_path, cmd1_args, envp) == -1)
@@ -118,8 +115,8 @@ int	main(int argc, char **argv, char **envp)
 		child_process(fd, argv, envp, 2);
 	else
 	{
-		if (waitpid(p_id, NULL, 0) == -1)
-			error_handling(EC_WAIT);
+	//	if (waitpid(p_id, NULL, 0) == -1)
+	//		error_handling(EC_WAIT);
 		close(fd[1]);
 		parent_process(fd, argc, argv, envp);
 		close(fd[0]);

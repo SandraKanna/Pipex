@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   bonus-utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/19 17:28:59 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/29 14:12:24 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,37 +31,32 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (string1[i] - string2[i]);
 }
 
-void	setup_io(t_pipex_bonus *b_struc, int i, int here, int input_here)
-{
-
-}
-
-int	here_doc_exec(t_pipex_bonus *b_struc, char **av, char **env)
+int	here_doc_exec(t_pipex_bonus *bonus, char **av, char **env)
 {
 	int	i;
 	int	input_here;
 
 	i = 0;
-	input_here = b_struc->input_here;
-	while (i < b_struc->cmd_count)
+	input_here = bonus->input_hd;
+	while (i < bonus->cmd_count)
 	{
-		b_struc->pids[i] = fork();
-		if (b_struc->pids[i] < 0)
+		bonus->pids[i] = fork();
+		if (bonus->pids[i] < 0)
 			error_handling(EC_FORK);
-		else if (b_struc->pids[i] == 0)
+		else if (bonus->pids[i] == 0)
 		{
 			
 		}
 	}
 	i = 0;
-	while (i < b_struc->cmd_count)
+	while (i < bonus->cmd_count)
 	{
-		if (waitpid(b_struc->pids[i], NULL, 0) == -1)
+		if (waitpid(bonus->pids[i], NULL, 0) == -1)
 			error_handling(EC_WAIT);
 	}
 }
 
-void	init_here_doc(t_pipex_bonus *b_struc, char **av)
+void	init_here_doc(t_pipex_bonus **bonus, char **av)
 {
 	int		hd_pipe[2];
 	char	*line;
@@ -82,7 +77,7 @@ void	init_here_doc(t_pipex_bonus *b_struc, char **av)
 		free(line);
 	}
 	close(hd_pipe[1]);
-	b_struc->input_here = hd_pipe[0];
+	(*bonus)->input_hd = hd_pipe[0];
 }
 
 
