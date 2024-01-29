@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/18 18:25:48 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/29 12:05:14 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*parse_path(char *path_var, char *command)
 	while (split_path[i])
 	{
 		partial_path = ft_strjoin(split_path[i], "/");
+		//para err 8: agregar sh al comando ej: sh ./script.sh, buscabdo si len arg >3 y los ultimos chars son .sh => join sh + cmd
 		full_path = ft_strjoin(partial_path, command);
 		free(partial_path);
 		if (access(full_path, F_OK) == 0)
@@ -41,6 +42,8 @@ char	*parse_path(char *path_var, char *command)
 	return (NULL);
 }
 
+// for err TO: GNL function to read to *fd (sent by child) until theres no more to read (buff = NULL)
+// or we've reached Buffer_Size (strlen(buff)> buffer size)
 void	child_process(int *fd, char **av, char **envp, int index)
 {
 	int		in_file;
@@ -58,6 +61,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 	if (cmd1_path == NULL)
 		error_handling(EC_EXECVE);
 	dup2(in_file, 0);
+	//GNL to *fd
 	dup2(fd[1], 1);
 	close(fd[1]);
 	if (execve(cmd1_path, cmd1_args, envp) == -1)
