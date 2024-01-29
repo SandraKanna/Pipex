@@ -14,31 +14,31 @@
 
 //https://github.com/mcombeau/pipex
 
-// for err TO: GNL function to read to *fd (sent by child) until theres no more to read (buff = NULL)
-// or we've reached Buffer_Size (strlen(buff)> buffer size)
 
-char parse_command()
+void	bonus_child(t_pipex_bonus *bonus, char **av, char **env, int i)
 {
-	char	*cmd1_path;
-	char	**cmd1_args;
-	char	*path_var;
-	
-	cmd1_args = ft_split((const char *)av[index], ' ');
-	path_var = get_path_var(envp);
-	cmd1_path = parse_path(path_var, cmd1_args[0]);
-	if (cmd1_path == NULL)
-		error_handling(EC_EXECVE);
+	if (i == 0 && bonus->here_doc)
+		dup2(bonus->input_hd, 0);
+	else if (i != 0)
+		dup2(bonus->pipe_fd[i - 1][0], 0);
+	if (i != bonus->cmd_count - 1)
+		dup2(bonus->pipe_fd[i][1], 1);
+	else if (!bonus->here_doc)
+		dup2();
+	i = 0;
+	while (i < bonus->cmd_count - 1)
+	{
+		close (bonus->pipe_fd[i][0]);
+		close (bonus->pipe_fd[i][1]);
+		i++;
+	}
+
 }
 
-void	exec()
-{
-	
-}
-
-void	classic_exec(t_pipex_bonus *bonus, char **av, char **env)
+void	fork_cmd_exec(t_pipex_bonus *bonus, char **av, char **env, int hd)
 {
 	int		i;
-	
+
 	i = 0;
 	while (i < bonus->cmd_count)
 	{
@@ -46,13 +46,9 @@ void	classic_exec(t_pipex_bonus *bonus, char **av, char **env)
 		if (bonus->pids[i] < 0)
 			error_handling(EC_FORK);
 		else if (bonus->pids[i] == 0)
-		{
-
-		//	exec(bonus->pids[i], av, env, i);
-		}
+			bonus_child(&bonus, av, env, i);
+		i++;
 	}
-	if (waitpid(bonus->pids[i], NULL, 0) == -1)
-		//error_handling(EC_WAIT);
 }
 
 void	create_pipes(t_pipex_bonus *bonus)
@@ -63,10 +59,7 @@ void	create_pipes(t_pipex_bonus *bonus)
 	while (i < bonus->cmd_count - 1)
 	{
 		if (pipe(bonus->pipe_fd[i]) < 0)
-		{
-			clean_stuct(?);
 			error_handling(EC_PIPE);
-		}
 		i++;
 	}
 }
@@ -77,16 +70,13 @@ void	init_struct(t_pipex_bonus *bonus, int ac, char **av, int here)
 
 	i = 0;
 	if (here)
-	{
 		bonus->cmd_count = ac - 4;
-		init_here_doc(bonus, av);
-	}
 	else
 		bonus->cmd_count = ac - 3;
 	bonus->pipe_fd = malloc (sizeof(int *) * (bonus->cmd_count - 1));
 	bonus->pids = malloc (sizeof(pid_t) * (bonus->cmd_count));
 	if (!bonus->pipe_fd || !bonus->pids)
-		error_handling(EC_PIPE);
+		error_handling(EC_MEM);
 	while (i < bonus->cmd_count - 1)
 	{
 		bonus->pipe_fd[i] = malloc (sizeof(int) * 2);
@@ -99,6 +89,31 @@ void	init_struct(t_pipex_bonus *bonus, int ac, char **av, int here)
 int	main(int ac, char **av, char **envp)
 {
 	t_pipex_bonus	bonus;
+	int				i;
+	int				wstatus;
+
+	if (ac < 5)
+		error_handling(EC_ARGS);
+	bonus.here_doc = (ft_strcmp(av[1], "here_doc") == 0);
+	init_struct(&bonus, ac, av, bonus.here_doc);
+	create_pipes(&bonus);
+	set_infile(&bonus, av);
+	set_outfile(&bonus, av, ac);
+	fork_cmd_exec(&bonus, av, envp, bonus.here_doc);
+	i = 0;
+	while (i < bonus.cmd_count)
+	{
+		if (waitpid(bonus.pids[i], &wstatus, 0) == -1)
+			error_handling(EC_WAIT);
+		i++;
+	}
+	return (0);
+}
+
+/*int	main(int ac, char **av, char **envp)
+{
+	t_pipex_bonus	bonus;
+	//int				i;
 
 	if (ac < 5)
 		error_handling(EC_ARGS);
@@ -109,6 +124,6 @@ int	main(int ac, char **av, char **envp)
 		here_doc_exec();
 	else
 		classic_exec(&bonus, av, envp);
-	clean_stuct(?);
+	
 	return (0);
-}
+}*/

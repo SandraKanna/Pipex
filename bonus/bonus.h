@@ -42,12 +42,15 @@ typedef enum e_error_code_bonus
 }	t_error_code_bonus;
 
 int		ft_strcmp(const char *s1, const char *s2);
-void	init_here_doc(t_pipex_bonus *b_struc, char **av);
 void	create_pipes(t_pipex_bonus *bonus);
 char	*get_next_line(int fd);
 void	free_all(t_lst **lst);
 t_lst	*new_elem(char *buf, int bytes);
 int		check_line(t_lst *lst, char c, int read_bytes);
 void	check_rest(t_lst **lst, int i);
+void	fork_cmd_exec(t_pipex_bonus *bonus, char **av, char **env, int hd);
+void	read_here_doc(t_pipex_bonus *bonus, char **av);
+void	set_infile(t_pipex_bonus *bonus, char **av);
+void	set_outfile(t_pipex_bonus *bonus, char **av, int ac);
 
 #endif

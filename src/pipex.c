@@ -58,7 +58,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 	cmd1_path = parse_path(path_var, cmd1_args[0]);
 	if (cmd1_path == NULL)
 		error_handling(EC_EXECVE);
-	dup2(in_file, 0)
+	dup2(in_file, 0);
 	dup2(fd[1], 1);
 	close(fd[1]);
 	if (execve(cmd1_path, cmd1_args, envp) == -1)
