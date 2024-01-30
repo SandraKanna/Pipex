@@ -12,15 +12,23 @@
 
 #include "../src/pipex.h"
 
-static char	*ft_vide(void)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	*str;
+	int				i;
+	unsigned char	*string1;
+	unsigned char	*string2;
 
-	str = malloc(1);
-	if (str == NULL)
-		return (NULL);
-	str[0] = '\0';
-	return (str);
+	i = 0;
+	string1 = (unsigned char *)s1;
+	string2 = (unsigned char *)s2;
+	while ((string1[i]))
+	{
+		if (string1[i] == string2[i])
+			i++;
+		else
+			return (string1[i] - string2[i]);
+	}
+	return (string1[i] - string2[i]);
 }
 
 int	ft_strlen(const char *str)

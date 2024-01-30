@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-char	*parse_path(char *path_var, char *command)
+char	*parse_cmd(char *path_var, char *command)
 {
 	char	**split_path;
 	char	*partial_path;
@@ -26,7 +26,6 @@ char	*parse_path(char *path_var, char *command)
 	while (split_path[i])
 	{
 		partial_path = ft_strjoin(split_path[i], "/");
-		//para err 8: agregar sh al comando ej: sh ./script.sh, buscabdo si len arg >3 y los ultimos chars son .sh => join sh + cmd
 		full_path = ft_strjoin(partial_path, command);
 		free(partial_path);
 		if (access(full_path, F_OK) == 0)
@@ -42,7 +41,64 @@ char	*parse_path(char *path_var, char *command)
 	return (NULL);
 }
 
+int	execute(char **av, char **envp, int index)
+{
+	char	*path_var;
+	char	*full_cmd;
+	char	**cmd_args;
+	int		cmd_len;
+
+	cmd_args = ft_split((const char *)av[index], ' ');
+	cmd_len = ft_strlen(cmd_args[0]);
+	if (cmd_len > 3 &&
+		ft_strcmp(cmd_args[0] + ft_strlen(cmd_args[0]) - 3, ".sh") == 0)
+	{
+		full_cmd = ft_strjoin("/bin/sh ", cmd_args[0]);
+		cmd_args[0] = full_cmd;
+	}
+	else
+	{
+		path_var = get_path_var(envp);
+		full_cmd = parse_cmd(path_var, cmd_args[0]);
+	}
+	if (full_cmd == NULL)
+		return (free_args(full_cmd, cmd_args, path_var), 0);
+	if (execve(full_cmd, cmd_args, envp) == -1)
+		return (free_args(full_cmd, cmd_args, path_var), 0);
+	return (1);
+}
+
 void	child_process(int *fd, char **av, char **envp, int index)
+{
+	int		in_file;
+	int		bytes_read;
+	char	buffer[1025];
+
+	close(fd[0]);
+	in_file = open(av[1], O_RDONLY);
+	if (in_file < 0)
+		error_handling(EC_INFILE);
+	bytes_read = 1;
+	// if (ft_strcmp(av[1], "/dev/urandom") == 0)
+	// {
+		while (bytes_read > 0)
+		{
+			bytes_read = read(in_file, buffer, 1024);
+			write(fd[1], buffer, bytes_read);
+		}
+		if (bytes_read < 0)
+			error_handling(EC_INFILE);
+	// }
+	dup2(in_file, 0);
+	close (in_file);
+	dup2(fd[1], 1);
+	close(fd[1]);
+	if (!execute(av, envp, index))
+		error_handling(EC_EXECVE);
+}
+
+
+/*void	child_process(int *fd, char **av, char **envp, int index)
 {
 	int		in_file;
 	char	*cmd1_path;
@@ -55,7 +111,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 		error_handling(EC_INFILE);
 	cmd1_args = ft_split((const char *)av[index], ' ');
 	path_var = get_path_var(envp);
-	cmd1_path = parse_path(path_var, cmd1_args[0]);
+	cmd1_path = parse_cmd(path_var, cmd1_args[0]);
 	if (cmd1_path == NULL)
 		error_handling(EC_EXECVE);
 	dup2(in_file, 0);
@@ -68,9 +124,27 @@ void	child_process(int *fd, char **av, char **envp, int index)
 		free(path_var);
 		error_handling(EC_EXECVE);
 	}
-}
+}*/
 
 void	parent_process(int *fd, int ac, char **av, char **envp)
+{
+	int		out_file;
+
+	close(fd[1]);
+	out_file = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
+	if (out_file < 0)
+		error_handling(EC_OUTFILE);
+	dup2(out_file, 1);
+	dup2(fd[0], 0);
+	close(fd[0]);
+	if (!execute(av, envp, ac - 2))
+	{
+		close (out_file);
+		error_handling(EC_EXECVE);
+	}
+}
+
+/*void	parent_process(int *fd, int ac, char **av, char **envp)
 {
 	int		out_file;
 	char	*cmd2_path;
@@ -83,7 +157,7 @@ void	parent_process(int *fd, int ac, char **av, char **envp)
 		error_handling(EC_OUTFILE);
 	cmd2_args = ft_split((const char *)av[ac - 2], ' ');
 	path_var = get_path_var(envp);
-	cmd2_path = parse_path(path_var, cmd2_args[0]);
+	cmd2_path = parse_cmd(path_var, cmd2_args[0]);
 	if (cmd2_path == NULL)
 		error_handling(EC_EXECVE);
 	dup2(out_file, 1);
@@ -97,7 +171,7 @@ void	parent_process(int *fd, int ac, char **av, char **envp)
 		close(out_file);
 		error_handling(EC_EXECVE);
 	}
-}
+}*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -115,8 +189,8 @@ int	main(int argc, char **argv, char **envp)
 		child_process(fd, argv, envp, 2);
 	else
 	{
-	//	if (waitpid(p_id, NULL, 0) == -1)
-	//		error_handling(EC_WAIT);
+		// if (waitpid(p_id, NULL, 0) == -1)
+		// 	error_handling(EC_WAIT);
 		close(fd[1]);
 		parent_process(fd, argc, argv, envp);
 		close(fd[0]);

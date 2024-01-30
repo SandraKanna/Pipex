@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../src/pipex.h"
 #include "../bonus/bonus.h"
 
 t_lst	*new_elem(char *buf, int bytes)

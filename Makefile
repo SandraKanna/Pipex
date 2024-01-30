@@ -5,10 +5,11 @@ CFLAGS = -Wall -Wextra -Werror -g3
 #-Ibonus
 
 CFILES = src/pipex.c utils/ft_split.c \
-		utils/auxiliar.c utils/utils.c
+		utils/auxiliar.c utils/utils.c utils/clean.c 
 
 #BONUS_FILES = bonus/bonus.c bonus/bonus-utils.c \
-			gnl/get_next_line_utils.c gnl/get_next_line.c
+		gnl/get_next_line_utils.c gnl/get_next_line.c
+			
 
 OBJ = $(CFILES:.c=.o)
 #BONUS_OBJ = $(BONUS_FILES:.c=.o)

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../src/pipex.h"
 #include "../bonus/bonus.h"
 
 static void	free_all(t_lst **lst)
@@ -73,19 +74,19 @@ static int	save_in_lst(char *buffer, t_lst **lst, int read_bytes)
 	return (check_line(*lst, '\n', read_bytes));
 }
 
-static int	check_read(int fd, t_lst **lst)
+static int	check_read(int fd, t_lst **lst, int buffer_size)
 {
 	int		b_read;
 	int		len_line;
 	char	*buffer;
 
 	len_line = 0;
-	buffer = malloc (BUFFER_SIZE + 1);
+	buffer = malloc (buffer_size + 1);
 	if (!buffer)
 		return (-1);
 	while (1)
 	{
-		b_read = read(fd, buffer, BUFFER_SIZE);
+		b_read = read(fd, buffer, buffer_size);
 		if (b_read < 0 || (b_read == 0 && *lst == NULL))
 			return (free(buffer), -1);
 		if (b_read == 0 && *lst != NULL)
@@ -106,10 +107,12 @@ char	*get_next_line(int fd)
 	static t_lst	*lst[1024];
 	char			*line;
 	int				len_line;
+	int				buffer_size;
 
-	if (fd < 0 || (BUFFER_SIZE <= 0))
+	buffer_size = 1024;
+	if (fd < 0 || (buffer_size <= 0))
 		return (NULL);
-	len_line = check_read(fd, &(lst[fd]));
+	len_line = check_read(fd, &(lst[fd]), buffer_size);
 	if (len_line < 0)
 	{
 		free_all (&(lst[fd]));

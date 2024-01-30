@@ -15,41 +15,74 @@
 //https://github.com/mcombeau/pipex
 
 
-void	bonus_child(t_pipex_bonus *bonus, char **av, char **env, int i)
+//void	bonus_child(t_pipex_bonus *bonus, char **av, char **env, int i)
+
+void	execute(char **av, char **env, int index)
 {
-	if (i == 0 && bonus->here_doc)
-		dup2(bonus->input_hd, 0);
-	else if (i != 0)
-		dup2(bonus->pipe_fd[i - 1][0], 0);
-	if (i != bonus->cmd_count - 1)
-		dup2(bonus->pipe_fd[i][1], 1);
-	else if (!bonus->here_doc)
-		dup2();
-	i = 0;
-	while (i < bonus->cmd_count - 1)
-	{
-		close (bonus->pipe_fd[i][0]);
-		close (bonus->pipe_fd[i][1]);
-		i++;
-	}
+	char	*cmd1_path;
+	char	**cmd1_args;
+	char	*path_var;
+
+
+	
+void	execute(char **av, char **env, int index)
+{
+	char	*cmd1_path;
+	char	**cmd1_args;
+	char	*path_var;
+
+
+	cmd1_args = ft_split((const char *)av[index], ' ');
+	//para err 8: agregar sh al comando ej: sh ./script.sh, buscabdo si len arg >3 y los ultimos chars son .sh => join sh + cmd
+	path_var = get_path_var(env);
+	cmd1_path = parse_path(path_var, cmd1_args[0]);
 
 }
 
-void	fork_cmd_exec(t_pipex_bonus *bonus, char **av, char **env, int hd)
+void	create_children(t_pipex_bonus *bonus, char **av, char **env, int hd)
 {
 	int		i;
+	int		index;
 
 	i = 0;
+	index = 2;
+	if (bonus->here_doc)
+		index += 1;
 	while (i < bonus->cmd_count)
 	{
 		bonus->pids[i] = fork();
 		if (bonus->pids[i] < 0)
 			error_handling(EC_FORK);
 		else if (bonus->pids[i] == 0)
-			bonus_child(&bonus, av, env, i);
+			execute (av, env, index);
 		i++;
 	}
 }
+	//para err 8: agregar sh al comando ej: sh ./script.sh, buscabdo si len arg >3 y los ultimos chars son .sh => join sh + cmd
+	path_var = get_path_var(env);
+	cmd1_path = parse_path(path_var, cmd1_args[0]);
+
+}
+
+/*void	create_children(t_pipex_bonus *bonus, char **av, char **env, int hd)
+{
+	int		i;
+	int		index;
+
+	i = 0;
+	index = 2;
+	if (bonus->here_doc)
+		index += 1;
+	while (i < bonus->cmd_count)
+	{
+		bonus->pids[i] = fork();
+		if (bonus->pids[i] < 0)
+			error_handling(EC_FORK);
+		else if (bonus->pids[i] == 0)
+			execute (av, env, index);
+		i++;
+	}
+}*/
 
 void	create_pipes(t_pipex_bonus *bonus)
 {
@@ -99,7 +132,7 @@ int	main(int ac, char **av, char **envp)
 	create_pipes(&bonus);
 	set_infile(&bonus, av);
 	set_outfile(&bonus, av, ac);
-	fork_cmd_exec(&bonus, av, envp, bonus.here_doc);
+	create_children(&bonus, av, envp, bonus.here_doc);
 	i = 0;
 	while (i < bonus.cmd_count)
 	{
@@ -109,21 +142,3 @@ int	main(int ac, char **av, char **envp)
 	}
 	return (0);
 }
-
-/*int	main(int ac, char **av, char **envp)
-{
-	t_pipex_bonus	bonus;
-	//int				i;
-
-	if (ac < 5)
-		error_handling(EC_ARGS);
-	bonus.here_doc = (ft_strcmp(av[1], "here_doc") == 0);
-	init_struct(&bonus, ac, av, bonus.here_doc);
-	create_pipes(&bonus);
-	if (bonus.here_doc)
-		here_doc_exec();
-	else
-		classic_exec(&bonus, av, envp);
-	
-	return (0);
-}*/

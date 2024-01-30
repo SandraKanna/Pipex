@@ -1,0 +1,181 @@
+Tests
+
+# 01: The program compiles                                                  [OK]
+# 02: The program is executable as ./pipex                                  [OK]
+# 03: The program doesn't use forbidden functions                           [OK]
+# 04: The program does not crash with no parameters                         [OK]
+# 05: The program does not crash with one parameter                         [OK]
+# 06: The program does not crash with two parameters                        [OK]
+# 07: The program does not crash with three parameters                      [OK]
+# 08: The program exits with the last command's status code                 [OK]
+# 09: The program handles infile's open error                               [OK]
+# 10: The output when infile's open error occur is correct                  [OK]
+# 11: The program handles outfile's open error                              [OK]
+# 12: The program handles execve errors                                     [OK]
+# 13: The program handles path that doesn't exist                           [OK]
+# 14: The program uses the environment list                                 [OK]
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "cat" "hostname" "outs/test-xx.txt"
+
+# 15: The program handles the command                                       [OK]
+# 16: The output of the command is correct                                  [OK]
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "grep Now" "head -2" "outs/test-xx.txt"
+
+# 17: The program handles the command                                       [OK]
+# 18: The output of the command is correct                                  [KO]
+Your pipex:
+"And you're ready to give it to us?" urged Loonquawl.
+"I am."
+Bash:
+"Now?"
+"Now," said Deep Thought.
+Your tty output:
+Your exit status:
+Exit status: 0
+Expected: <128
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "grep Now" "wc -w" "outs/test-xx.txt"
+
+# 19: The program handles the command                                       [OK]
+# 20: The output of the command is correct                                  [KO]
+Your pipex:
+     127
+Bash:
+      21
+Your tty output:
+Your exit status:
+Exit status: 0
+Expected: <128
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "grep Now" "cat" "outs/test-xx.txt"
+then:
+../pipex "assets/deepthought.txt" "wc -w" "cat" "outs/test-xx.txt"
+
+# 21: The program handles the command                                       [OK]
+# 22: The output of the command is correct                                  [KO]
+Your pipex:
+"And you're ready to give it to us?" urged Loonquawl.
+"I am."
+"Now?"
+"Now," said Deep Thought.
+They both licked their dry lips.
+"Though I don't think," added Deep Thought, "that you're going to like it."
+"Doesn't matter!" said Phouchg. "We must know it! Now!"
+"Now?" inquired Deep Thought.
+"Yes! Now ..."
+"Alright," said the computer and settled into silence again. The two men fidgeted. The tension was unbearable.
+"You're really not going to like it," observed Deep Thought.
+"Tell us!"
+"Alright," said Deep Thought. "The Answer to the Great Question..."
+"Yes ...!"
+"Of Life, the Universe and Everything ..." said Deep Thought.
+"Yes ...!"
+"Is ..." said Deep Thought, and paused.
+"Yes ...!"
+"Is ..."
+"Yes ...!!!...?"
+"Forty-two," said Deep Thought, with infinite majesty and calm.
+       0
+Bash:
+     127
+Your exit status:
+Exit status: 0
+Expected: <128
+Exit status: 0
+Expected: <128
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "notexisting" "wc" "outs/test-xx.txt"
+(notexisting is a command that is not supposed to exist)
+
+# 23: The program handles the command                                       [OK]
+# 24: The output of the command contains 'command not found'                [OK]
+Your pipex:
+      21     127     781
+Your tty output:
+Waitpid returned error: No such file or directory
+Your exit status:
+Exit status: 0
+Expected: <128
+# 25: The output of the command is correct                                  [KO]
+Your pipex:
+      21     127     781
+Bash:
+       0       0       0
+Your tty output:
+Waitpid returned error: No such file or directory
+Your exit status:
+Exit status: 0
+Expected: <128
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "cat" "notexisting" "outs/test-xx.txt"
+(notexisting is a command that is not supposed to exist)
+
+# 26: The program exits with the right status code                          [OK]
+# 27: The output of the command contains 'command not found'                [OK]
+Your pipex:
+Your tty output:
+Waitpid returned error: No such file or directory
+Your exit status:
+Exit status: 127
+Expected: <128
+# 28: The output of the command is correct                                  [OK]
+
+The next tests will use the following command:
+../pipex "assets/deepthought.txt" "grep Now" "/bin/cat" "outs/test-xx.txt"
+# 29: The program exits with the right status code                          [OK]
+# 30: The output of the command is correct                                  [OK]
+Your pipex:
+"And you're ready to give it to us?" urged Loonquawl.
+"I am."
+"Now?"
+"Now," said Deep Thought.
+They both licked their dry lips.
+"Though I don't think," added Deep Thought, "that you're going to like it."
+"Doesn't matter!" said Phouchg. "We must know it! Now!"
+"Now?" inquired Deep Thought.
+"Yes! Now ..."
+"Alright," said the computer and settled into silence again. The two men fidgeted. The tension was unbearable.
+"You're really not going to like it," observed Deep Thought.
+"Tell us!"
+"Alright," said Deep Thought. "The Answer to the Great Question..."
+"Yes ...!"
+"Of Life, the Universe and Everything ..." said Deep Thought.
+"Yes ...!"
+"Is ..." said Deep Thought, and paused.
+"Yes ...!"
+"Is ..."
+"Yes ...!!!...?"
+"Forty-two," said Deep Thought, with infinite majesty and calm.
+Bash:
+"Now?"
+"Now," said Deep Thought.
+"Doesn't matter!" said Phouchg. "We must know it! Now!"
+"Now?" inquired Deep Thought.
+"Yes! Now ..."
+Your tty output:
+Your exit status:
+Exit status: 0
+Expected: <128
+
+The next test will use the following command:
+../pipex "/dev/urandom" "cat" "head -1" "outs/test-xx.txt"
+
+# 31: The program does not timeout                                          [OK]
+
+
+	Summary
+
+27 OK - 4 KO
+
+OK: Test passed
+OK: Not optimal or like bash (should not invalidate the project)
+KO: Test did not pass
+LK: Test detected leaks
+TO: Test timed out
