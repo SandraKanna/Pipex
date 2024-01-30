@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/29 12:55:32 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/30 15:46:11 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,7 @@ char	*get_path_var(char **envp)
 		{
 			path = ft_strdup((const char *)envp[i] + 5);
 			if (!path)
-			{
-				perror("Couldn't find path");
-				exit (EXIT_FAILURE);
-			}
-			break ;
+				error_handling(EC_EXECVE);
 		}
 		i++;
 	}
@@ -94,9 +90,9 @@ int	check_abs_path(char *cmd)
 
 int	error_handling(t_error_code error_code)
 {
-	const char	*error_msg[] = {ERROR_ARGS, ERROR_EXECVE,
-		ERROR_FORK, ERROR_INFILE, ERROR_OUTFILE,
-		ERROR_PIPE, ERROR_WAIT, ERROR_MEM};
+	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE,
+		ERROR_FORK, ERROR_INFILE, ERROR_OUTFILE, ERROR_EXECVE,
+		ERROR_MEM};
 
 	perror(error_code[error_msg]);
 	if (error_code == EC_EXECVE)

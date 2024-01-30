@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 18:00:10 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/29 12:53:54 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/30 16:06:14 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	len_s = ft_strlen(s);
 	if (start >= len_s || !len)
-		return (ft_vide());
+		return (ft_empty());
 	if (len > len_s)
 		len = len_s;
 	if (len > len_s - start)

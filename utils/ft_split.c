@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:37:04 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/18 18:24:07 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/30 14:35:12 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ static int	count_args(char const *s, char c, int q)
 	return (args);
 }
 
-static char	**free_split(char **split, int h)
+char	**free_split(char **split)
 {
 	int	i;
 
 	i = 0;
-	while (i < h)
+	while (split[i])
 	{
 		free (split[i]);
 		i++;
@@ -101,7 +101,7 @@ static char	**fill_args(char **split, char const *s, size_t args, char c)
 		split[h] = ft_substr(s, 0, len_args);
 		if (!split[h])
 		{
-			free_split(split, h);
+			free_split(split);
 			return (NULL);
 		}
 		s += len_args;
@@ -144,6 +144,7 @@ char	**ft_split(char const *s, char c)
 	while (split[i])
 	{	
 		printf("String %d: |%s|\n", i, split[i]);
+		free (split[i]);
 		i++;
 		printf("\n");
 	}

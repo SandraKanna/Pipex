@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/30 15:46:23 by skanna            #+#    #+#             */
+/*   Updated: 2024/01/30 16:17:33 by skanna           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../src/pipex.h"
 
-char	*ft_vide(void)
+char	*ft_empty(void)
 {
 	char	*str;
 
@@ -11,7 +23,7 @@ char	*ft_vide(void)
 	return (str);
 }
 
-void	free_args(char *full_cmd, char **cmd_args, char *path)
+void	free_cmds(char *full_cmd, char **cmd_args, char *path)
 {
 	int	i;
 
@@ -21,7 +33,7 @@ void	free_args(char *full_cmd, char **cmd_args, char *path)
 	if (cmd_args)
 	{
 		while (cmd_args[i])
-			free(cmd_args[i++]);
+			free(cmd_args[i++]);//double free?
 		free(cmd_args);
 	}
 	if (path)

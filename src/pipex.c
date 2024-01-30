@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/29 13:14:52 by skanna           ###   ########.fr       */
+/*   Updated: 2024/01/30 16:11:24 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,16 @@ char	*parse_cmd(char *path_var, char *command)
 		free(partial_path);
 		if (access(full_path, F_OK) == 0)
 		{
-			i = 0;
-			while (split_path[i])
-				free(split_path[i++]);
-			free(split_path);
+			// i = 0;
+			// while (split_path[i])
+			// 	free(split_path[i++]);
+			// free(split_path);
+			free_split(split_path);
 			return (full_path);
 		}
 		i++;
 	}
+	free_split(split_path);
 	return (NULL);
 }
 
@@ -53,7 +55,7 @@ int	execute(char **av, char **envp, int index)
 	if (cmd_len > 3 &&
 		ft_strcmp(cmd_args[0] + ft_strlen(cmd_args[0]) - 3, ".sh") == 0)
 	{
-		full_cmd = ft_strjoin("/bin/sh ", cmd_args[0]);
+		full_cmd = ft_strjoin("sh ", cmd_args[0]); //rajputer "/"
 		cmd_args[0] = full_cmd;
 	}
 	else
@@ -62,9 +64,9 @@ int	execute(char **av, char **envp, int index)
 		full_cmd = parse_cmd(path_var, cmd_args[0]);
 	}
 	if (full_cmd == NULL)
-		return (free_args(full_cmd, cmd_args, path_var), 0);
-	if (execve(full_cmd, cmd_args, envp) == -1)
-		return (free_args(full_cmd, cmd_args, path_var), 0);
+		return (free_cmds(full_cmd, cmd_args, path_var), 0);
+	else if (execve(full_cmd, cmd_args, envp) == -1)
+		return (free_cmds(full_cmd, cmd_args, path_var), 0);
 	return (1);
 }
 
@@ -79,8 +81,8 @@ void	child_process(int *fd, char **av, char **envp, int index)
 	if (in_file < 0)
 		error_handling(EC_INFILE);
 	bytes_read = 1;
-	// if (ft_strcmp(av[1], "/dev/urandom") == 0)
-	// {
+	if (ft_strcmp(av[1], "/dev/urandom") == 0)
+	{
 		while (bytes_read > 0)
 		{
 			bytes_read = read(in_file, buffer, 1024);
@@ -88,7 +90,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 		}
 		if (bytes_read < 0)
 			error_handling(EC_INFILE);
-	// }
+	}
 	dup2(in_file, 0);
 	close (in_file);
 	dup2(fd[1], 1);
@@ -119,9 +121,7 @@ void	child_process(int *fd, char **av, char **envp, int index)
 	close(fd[1]);
 	if (execve(cmd1_path, cmd1_args, envp) == -1)
 	{
-		free(cmd1_args);
-		free(cmd1_path);
-		free(path_var);
+		free_cmds(cmd1_path, cmd1_args, path_var);
 		error_handling(EC_EXECVE);
 	}
 }*/
@@ -165,12 +165,10 @@ void	parent_process(int *fd, int ac, char **av, char **envp)
 	close(fd[0]);
 	if (execve(cmd2_path, cmd2_args, envp) == -1)
 	{
-		free(cmd2_args);
-		free(cmd2_path);
-		free(path_var);
-		close(out_file);
+		free_cmds(cmd2_path, cmd2_args, path_var);
 		error_handling(EC_EXECVE);
 	}
+
 }*/
 
 int	main(int argc, char **argv, char **envp)
