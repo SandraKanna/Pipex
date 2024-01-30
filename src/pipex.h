@@ -22,7 +22,7 @@
 # define ERROR_ARGS "Please enter the right parameters"
 # define ERROR_PIPE "Unable to create pipe"
 # define ERROR_FORK "Error creating child1 process"
-//# define ERROR_WAIT "Waitpid returned error"
+# define ERROR_WAIT "Waitpid returned error"
 # define ERROR_INFILE "Unable to open in_file"
 # define ERROR_OUTFILE "Unable to open or create out_file"
 # define ERROR_EXECVE "Command not found"
@@ -33,7 +33,7 @@ typedef enum e_error_code
 	EC_ARGS,
 	EC_PIPE,
 	EC_FORK,
-	//EC_WAIT,
+	EC_WAIT,
 	EC_INFILE,
 	EC_OUTFILE,
 	EC_EXECVE,
