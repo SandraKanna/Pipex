@@ -13,78 +13,59 @@
 #include "pipex.h"
 #include "../libft_v2/original_src/libft.h"
 
-/*int	execute_helper(char *path_var, char **env, char **cmd_args, int cmd_len)
+char	*parse_cmd(char *path_var, char *command)
 {
-	char	*full_cmd;
-	char	*cmd_sh;
+	char	**split_path;
+	char	*partial_path;
+	char	*full_path;
+	int		i;
 
-	cmd_sh = NULL;
-	if (cmd_len > 3 && ft_strcmp(cmd_args[0]
-			+ ft_strlen(cmd_args[0]) - 3, ".sh") == 0)
+	split_path = split_for_parse((char const *)path_var, ':');
+	i = 0;
+	while (split_path[i])
 	{
-		cmd_sh = ft_strjoin("sh ", cmd_args[0]);
-		if (!cmd_sh)
-			return (0);
-		full_cmd = parse_cmd(path_var, cmd_sh);
-		free (cmd_args[0]);
-		cmd_args[0] = cmd_sh;
+		partial_path = ft_strjoin(split_path[i], "/");
+		full_path = ft_strjoin(partial_path, command);
+		free(partial_path);
+		if (!full_path)
+			return (NULL);
+		if (access(full_path, F_OK) == 0 && access(full_path, X_OK) == 0)
+		{
+			free_split(split_path);
+			return (full_path);
+		}
+		free (full_path);
+		i++;
 	}
-	else
-		full_cmd = parse_cmd(path_var, cmd_args[0]);
-	if (!full_cmd)
-	{
-		free (cmd_sh);
-		return (free_cmds(NULL, cmd_args, path_var), 0);
-	}
-	return (execve(full_cmd, cmd_args, env) != -1);
+	if (split_path[i])
+		free_split(split_path);
+	return (NULL);
 }
 
 int	execute(char **av, char **envp, int index)
 {
 	char	*path_var;
-	char	**cmd_args;
-	int		cmd_len;
-	int		has_executed;
-
-	path_var = get_path_var(envp);
-	cmd_args = split_for_parse((const char *)av[index], ' ');
-	if (!cmd_args)
-	{
-		free (path_var);
-		return (0);
-	}
-	cmd_len = ft_strlen(cmd_args[0]);
-	has_executed = execute_helper(path_var, envp, cmd_args, cmd_len);
-	free_cmds(NULL, cmd_args, path_var);
-	return (has_executed);
-}*/
-
-int	execute(char **av, char **envp, int index)
-{
-	char	*path_var;
 	char	*full_cmd;
 	char	**cmd_args;
 
+	if (is_script(av[index]))
+		av[index] = ft_strjoin("sh ", av[index]);
 	path_var = get_path_var(envp);
+	if (!path_var)
+		return (0);
 	cmd_args = split_for_parse((const char *)av[index], ' ');
 	if (!cmd_args)
 		return (free(path_var), 0);
-	if (check_abs_path(cmd_args[0]))
+	if (absolute_path(cmd_args[0]))
 		full_cmd = cmd_args[0];
 	else
 	{
 		full_cmd = parse_cmd(path_var, cmd_args[0]);
 		if (!full_cmd)
-		{	
-			//return (free_cmds(NULL, cmd_args, path_var), 0);
-			//free_split(cmd_args);
-			free(path_var);
-			return 0;
-		}
+			return (free_cmds(NULL, cmd_args, path_var), 0);
 	}
 	if (execve(full_cmd, cmd_args, envp) == -1)
 		return (free_cmds(full_cmd, cmd_args, path_var), 0);
-		return (0);
 	return (1);
 }
 

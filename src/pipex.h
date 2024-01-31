@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/wait.h>
+
 # include "../libft_v2/original_src/libft.h"
 
 # define ERROR_ARGS "Please enter the right parameters"
@@ -44,7 +45,8 @@ typedef enum e_error_code
 void	free_cmds(char *full_cmd, char **cmd_args, char *path);
 int		error_handling(t_error_code error_code);
 char	*get_path_var(char **envp);
-int		check_abs_path(char *cmd);
+int		absolute_path(char *cmd);
+int		is_script(char *cmd);
 char	**split_for_parse(char const *s, char c);
 char	*parse_cmd(char *path_var, char *command);
 

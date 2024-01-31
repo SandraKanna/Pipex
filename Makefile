@@ -21,7 +21,7 @@ OBJ = $(CFILES:.c=.o)
 
 $(NAME): $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBFT)
-	@echo "done"
+	@echo "done!"
 
 $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR)

@@ -13,55 +13,6 @@
 #include "../src/pipex.h"
 #include "../libft_v2/original_src/libft.h"
 
-char	*parse_sh(char *command)
-{
-	int		cmd_len;
-
-	cmd_len = ft_strlen(command);
-	if (cmd_len > 3)
-	{
-		if (command[cmd_len - 1] == 'h' && command[cmd_len - 2] == 's'
-			&& command[cmd_len - 3] == '.')
-			return (ft_strjoin("sh ", command));
-	}
-	//&& ft_strcmp(command + ft_strlen(command) - 3, ".sh") == 0)
-	return (command);
-}
-
-char	*parse_cmd(char *path_var, char *command)
-{
-	char	**split_path;
-	char	*partial_path;
-	char	*full_path;
-	char	*filter_script;
-	int		i;
-
-	filter_script = parse_sh(command);
-	if (!filter_script)
-		return (NULL);
-	split_path = split_for_parse((char const *)path_var, ':');
-	i = 0;
-	while (split_path[i])
-	{
-		partial_path = ft_strjoin(split_path[i], "/");
-		full_path = ft_strjoin(partial_path, filter_script);
-		if (!full_path)
-			return (NULL);
-		free(partial_path);
-		if (access(full_path, F_OK) == 0)
-		{
-			free (filter_script);
-			free_split(split_path);
-			return (full_path);
-		}
-		free (full_path);
-		i++;
-	}
-	free (filter_script);
-	free_split(split_path);
-	return (NULL);
-}
-
 char	*get_path_var(char **envp)
 {
 	int		i;
@@ -82,7 +33,18 @@ char	*get_path_var(char **envp)
 	return (path);
 }
 
-int	check_abs_path(char *cmd)
+int	is_script(char *cmd)
+{
+	int		cmd_len;
+
+	cmd_len = ft_strlen(cmd);
+	if (cmd_len > 3 &&
+		ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
+		return (1);
+	return (0);
+}
+
+int	absolute_path(char *cmd)
 {
 	if (cmd[0] == '/')
 	{
