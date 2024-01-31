@@ -69,23 +69,7 @@ int	execute(char **av, char **envp, int index)
 	return (1);
 }
 
-void	child_process(int *fd, char **av, char **envp, int index)
-{
-	int		in_file;
-
-	close(fd[0]);
-	in_file = open(av[1], O_RDONLY);
-	if (in_file < 0)
-		error_handling(EC_INFILE);
-	dup2(in_file, 0);
-	close (in_file);
-	dup2(fd[1], 1);
-	close(fd[1]);
-	if (!execute(av, envp, index))
-		error_handling(EC_EXECVE);
-}
-
-void	parent_process(int *fd, int ac, char **av, char **envp)
+void	second_cmd(int *fd, int ac, char **av, char **envp)
 {
 	int		out_file;
 
@@ -103,6 +87,22 @@ void	parent_process(int *fd, int ac, char **av, char **envp)
 	}
 }
 
+void	first_cmd(int *fd, int ac, char **av, char **envp)
+{
+	int		in_file;
+
+	close(fd[0]);
+	in_file = open(av[ac - 4], O_RDONLY);
+	if (in_file < 0)
+		error_handling(EC_INFILE);
+	dup2(in_file, 0);
+	close (in_file);
+	dup2(fd[1], 1);
+	close(fd[1]);
+	if (!execute(av, envp, ac - 3))
+		error_handling(EC_EXECVE);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
@@ -115,12 +115,14 @@ int	main(int argc, char **argv, char **envp)
 	p_id = fork();
 	if (p_id < 0)
 		error_handling(EC_FORK);
-	else if (p_id == 0)
-		child_process(fd, argv, envp, 2);
-	else
+	else if (p_id == 0) //child
+		first_cmd(fd, argc, argv, envp);
+	else //parent
 	{
 		close(fd[1]);
-		parent_process(fd, argc, argv, envp);
+		second_cmd(fd, argc, argv, envp);
+		if (waitpid(p_id, NULL, 0) == -1)
+			error_handling(EC_WAIT);
 		close(fd[0]);
 	}
 	return (0);

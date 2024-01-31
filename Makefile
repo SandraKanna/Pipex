@@ -4,7 +4,7 @@ LIBFT_DIR = libft_v2
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3 -I$(LIBFT_DIR)
-#-fsanitize=address 
+#-fsanitize=address -fno-omit-frame-pointer 
 #-Ibonus
 
 CFILES = src/pipex.c utils/split_for_parse.c utils/utils.c

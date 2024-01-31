@@ -13,6 +13,30 @@
 #include "../src/pipex.h"
 #include "../libft_v2/original_src/libft.h"
 
+int	error_handling(t_error_code error_code)
+{
+	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE, ERROR_FORK,
+		ERROR_WAIT, ERROR_INFILE, ERROR_OUTFILE, ERROR_EXECVE,
+		ERROR_MEM};
+
+	perror(error_code[error_msg]);
+	if (error_code == EC_EXECVE)
+		exit(127);
+	else
+		exit(EXIT_FAILURE);
+}
+
+int	is_script(char *cmd)
+{
+	int		cmd_len;
+
+	cmd_len = ft_strlen(cmd);
+	if (cmd_len > 3 &&
+		ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
+		return (1);
+	return (0);
+}
+
 char	*get_path_var(char **envp)
 {
 	int		i;
@@ -33,17 +57,6 @@ char	*get_path_var(char **envp)
 	return (path);
 }
 
-int	is_script(char *cmd)
-{
-	int		cmd_len;
-
-	cmd_len = ft_strlen(cmd);
-	if (cmd_len > 3 &&
-		ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
-		return (1);
-	return (0);
-}
-
 int	absolute_path(char *cmd)
 {
 	if (cmd[0] == '/')
@@ -52,19 +65,6 @@ int	absolute_path(char *cmd)
 			return (1);
 	}
 	return (0);
-}
-
-int	error_handling(t_error_code error_code)
-{
-	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE, ERROR_FORK,
-		ERROR_WAIT, ERROR_INFILE, ERROR_OUTFILE, ERROR_EXECVE,
-		ERROR_MEM};
-
-	perror(error_code[error_msg]);
-	if (error_code == EC_EXECVE)
-		exit(127);
-	else
-		exit(EXIT_FAILURE);
 }
 
 void	free_cmds(char *full_cmd, char **cmd_args, char *path)
