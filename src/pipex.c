@@ -11,59 +11,80 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "../libft_v2/original_src/libft.h"
 
-char	*parse_cmd(char *path_var, char *command)
+/*int	execute_helper(char *path_var, char **env, char **cmd_args, int cmd_len)
 {
-	char	**split_path;
-	char	*partial_path;
-	char	*full_path;
-	int		i;
+	char	*full_cmd;
+	char	*cmd_sh;
 
-	if (check_abs_path(command))
-		return (command);
-	split_path = ft_split((char const *)path_var, ':');
-	i = 0;
-	while (split_path[i])
+	cmd_sh = NULL;
+	if (cmd_len > 3 && ft_strcmp(cmd_args[0]
+			+ ft_strlen(cmd_args[0]) - 3, ".sh") == 0)
 	{
-		partial_path = ft_strjoin(split_path[i], "/");
-		full_path = ft_strjoin(partial_path, command);
-		free(partial_path);
-		if (access(full_path, F_OK) == 0)
-		{
-			free_split(split_path);
-			return (full_path);
-		}
-		i++;
+		cmd_sh = ft_strjoin("sh ", cmd_args[0]);
+		if (!cmd_sh)
+			return (0);
+		full_cmd = parse_cmd(path_var, cmd_sh);
+		free (cmd_args[0]);
+		cmd_args[0] = cmd_sh;
 	}
-	free_split(split_path);
-	return (NULL);
+	else
+		full_cmd = parse_cmd(path_var, cmd_args[0]);
+	if (!full_cmd)
+	{
+		free (cmd_sh);
+		return (free_cmds(NULL, cmd_args, path_var), 0);
+	}
+	return (execve(full_cmd, cmd_args, env) != -1);
 }
+
+int	execute(char **av, char **envp, int index)
+{
+	char	*path_var;
+	char	**cmd_args;
+	int		cmd_len;
+	int		has_executed;
+
+	path_var = get_path_var(envp);
+	cmd_args = split_for_parse((const char *)av[index], ' ');
+	if (!cmd_args)
+	{
+		free (path_var);
+		return (0);
+	}
+	cmd_len = ft_strlen(cmd_args[0]);
+	has_executed = execute_helper(path_var, envp, cmd_args, cmd_len);
+	free_cmds(NULL, cmd_args, path_var);
+	return (has_executed);
+}*/
 
 int	execute(char **av, char **envp, int index)
 {
 	char	*path_var;
 	char	*full_cmd;
 	char	**cmd_args;
-	char	*cmd_sh;
-	int		cmd_len;
 
 	path_var = get_path_var(envp);
-	cmd_args = ft_split((const char *)av[index], ' ');
-	cmd_len = ft_strlen(cmd_args[0]);
-	cmd_sh = NULL;
-	if (cmd_len > 3 && ft_strcmp(cmd_args[0]
-			+ ft_strlen(cmd_args[0]) - 3, ".sh") == 0)
-	{
-		cmd_sh = ft_strjoin("sh ", cmd_args[0]);
-		full_cmd = parse_cmd(path_var, cmd_sh);
-		free (cmd_sh);
-	}
+	cmd_args = split_for_parse((const char *)av[index], ' ');
+	if (!cmd_args)
+		return (free(path_var), 0);
+	if (check_abs_path(cmd_args[0]))
+		full_cmd = cmd_args[0];
 	else
+	{
 		full_cmd = parse_cmd(path_var, cmd_args[0]);
-	if (!full_cmd)
-		return (free_cmds(NULL, cmd_args, path_var), 0);
-	else if (execve(full_cmd, cmd_args, envp) == -1)
+		if (!full_cmd)
+		{	
+			//return (free_cmds(NULL, cmd_args, path_var), 0);
+			//free_split(cmd_args);
+			free(path_var);
+			return 0;
+		}
+	}
+	if (execve(full_cmd, cmd_args, envp) == -1)
 		return (free_cmds(full_cmd, cmd_args, path_var), 0);
+		return (0);
 	return (1);
 }
 
@@ -117,8 +138,6 @@ int	main(int argc, char **argv, char **envp)
 		child_process(fd, argv, envp, 2);
 	else
 	{
-		// if (waitpid(p_id, NULL, 0) == -1)
-		// 	error_handling(EC_WAIT);
 		close(fd[1]);
 		parent_process(fd, argc, argv, envp);
 		close(fd[0]);

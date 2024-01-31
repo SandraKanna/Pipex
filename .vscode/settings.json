@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "pipex.h": "c",
-        "bonus.h": "c"
+        "bonus.h": "c",
+        "system_error": "c",
+        "libft.h": "c"
     }
 }

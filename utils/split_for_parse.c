@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../src/pipex.h"
+#include "../libft_v2/original_src/libft.h"
 
 static int	count_args(char const *s, char c, int q)
 {
@@ -41,18 +42,24 @@ static int	count_args(char const *s, char c, int q)
 	return (args);
 }
 
-char	**free_split(char **split)
+static int	has_quotes(char const *str)
 {
 	int	i;
+	int	quotes;
 
 	i = 0;
-	while (split[i])
+	quotes = 0;
+	while (str[i])
 	{
-		free (split[i]);
+		if (str[i] == 34 || str[i] == 39)
+			quotes++;
 		i++;
 	}
-	free(split);
-	return (NULL);
+	if (quotes % 2 == 0)
+		return (1);
+	else if (quotes == 0)
+		return (0);
+	return (-1);
 }
 
 static int	arg_len(char const *str, char c)
@@ -110,7 +117,7 @@ static char	**fill_args(char **split, char const *s, size_t args, char c)
 	return (split);
 }
 
-char	**ft_split(char const *s, char c)
+char	**split_for_parse(char const *s, char c)
 {
 	size_t	args;
 	char	**split;
@@ -142,7 +149,7 @@ char	**ft_split(char const *s, char c)
 	printf("String to be copied: %s\n", s);
 	split = ft_split(s, c);
 	while (split[i])
-	{	
+	{
 		printf("String %d: |%s|\n", i, split[i]);
 		free (split[i]);
 		i++;
