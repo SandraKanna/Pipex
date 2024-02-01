@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/30 16:11:24 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 14:17:27 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*parse_cmd(char *path_var, char *command)
 int	execute(char **av, char **envp, int index)
 {
 	char	*path_var;
-	char	*full_cmd;
+	char	*cmd_path;
 	char	**cmd_args;
 
 	if (is_script(av[index]))
@@ -57,15 +57,15 @@ int	execute(char **av, char **envp, int index)
 	if (!cmd_args)
 		return (free(path_var), 0);
 	if (absolute_path(cmd_args[0]))
-		full_cmd = cmd_args[0];
+		cmd_path = cmd_args[0];
 	else
 	{
-		full_cmd = parse_cmd(path_var, cmd_args[0]);
-		if (!full_cmd)
+		cmd_path = parse_cmd(path_var, cmd_args[0]);
+		if (!cmd_path)
 			return (free_cmds(NULL, cmd_args, path_var), 0);
 	}
-	if (execve(full_cmd, cmd_args, envp) == -1)
-		return (free_cmds(full_cmd, cmd_args, path_var), 0);
+	if (execve(cmd_path, cmd_args, envp) == -1)
+		return (free_cmds(cmd_path, cmd_args, path_var), 0);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:37:04 by skanna            #+#    #+#             */
-/*   Updated: 2023/10/26 19:24:00 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 14:07:12 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	count_args(char const *s, char c)
 	return (args);
 }
 
-void free_split(char **split)
+void	free_split(char **split)
 {
 	int	i;
 

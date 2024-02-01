@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/30 15:46:11 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 14:17:26 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ int	is_script(char *cmd)
 	int		cmd_len;
 
 	cmd_len = ft_strlen(cmd);
-	if (cmd_len > 3 &&
-		ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
+	if (cmd_len > 3 && ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
 		return (1);
 	return (0);
 }
