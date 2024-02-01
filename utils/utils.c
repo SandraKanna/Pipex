@@ -6,18 +6,18 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 14:17:26 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 18:16:23 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/pipex.h"
-#include "../libft_v2/original_src/libft.h"
+//#include "../libft_v2/original_src/libft.h"
 
 int	error_handling(t_error_code error_code)
 {
 	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE, ERROR_FORK,
 		ERROR_WAIT, ERROR_INFILE, ERROR_OUTFILE, ERROR_EXECVE,
-		ERROR_MEM};
+		ERROR_MEM, ERROR_INIT};
 
 	perror(error_code[error_msg]);
 	if (error_code == EC_EXECVE)

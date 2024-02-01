@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus-utils.c                                      :+:      :+:    :+:   */
+/*   bonus_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/29 14:12:24 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 18:15:22 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus.h"
 
-void	read_here_doc(t_pipex_bonus *bonus, char **av)
+void	read_here_doc(t_bonus *bonus, char **av)
 {
 	int		hd_pipe[2];
 	char	*line;
@@ -38,47 +38,38 @@ void	read_here_doc(t_pipex_bonus *bonus, char **av)
 			error_handling(EC_INIT);
 	}
 	close(hd_pipe[1]);
-	//bonus->input_hd = hd_pipe[0];
 	bonus->pipe_fd[0][0] = hd_pipe[0];
 }
 
-void	set_outfile(t_pipex_bonus *bonus, char **av, int ac)
+void	set_outfile(t_bonus *bonus, char **av, int ac)
 {
 	int		out_file;
 
 	out_file = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (out_file < 0)
 		error_handling(EC_OUTFILE);
-	dup2(out_file, 1);
+	//dup2(out_file, 1);
+	bonus->pipe_fd[bonus->cmd_count - 1][1] = out_file;
 	close (out_file);
 }
 
-void	set_infile(t_pipex_bonus *bonus, char **av)
+void	set_infile(t_bonus *bonus, char **av)
 {
 	int		in_file;
-	int		bytes_read;
-	char	buffer[1025];
 
 	if (bonus->here_doc)
 	{
 		read_here_doc(bonus, av);
-		//in_file = bonus->input_hd;
-		in_file = bonus->pipe_fd[0][0];
+		//in_file = bonus->pipe_fd[0][0];
 	}
 	else
 	{
 		in_file = open (av[1], O_RDONLY);
 		if (in_file < 0)
 			error_handling(EC_INFILE);
+		bonus->pipe_fd[0][0] = in_file;
 	}
-	bytes_read = 1;
-	while (bytes_read > 0)
-	{
-		bytes_read = read(in_file, buffer, 1024);
-		write(bonus->pipe_fd[0][1], buffer, bytes_read);
-	}
-	if (bytes_read < 0)
-		error_handling(EC_INFILE);
-	close (in_file);
+	//if (!bonus->here_doc)
+		close (in_file);
 	close (bonus->pipe_fd[0][1]);
 }

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   split_for_parse.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:37:04 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/30 14:35:12 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 18:09:01 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/pipex.h"
-#include "../libft_v2/original_src/libft.h"
+//#include "../libft_v2/original_src/libft.h"
 
 static int	count_args(char const *s, char c, int q)
 {

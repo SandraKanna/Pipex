@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/01/30 16:04:51 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 18:15:59 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@
 # define ERROR_INFILE "Unable to open in_file"
 # define ERROR_OUTFILE "Unable to open or create out_file"
 # define ERROR_EXECVE "Command not found"
-# define ERROR_MEM "Unable to allocate memory"
+# define ERROR_MEM "Malloc error"
+# define ERROR_INIT "Unable to initialize pipex structure for the bonus part"
 
 typedef enum e_error_code
 {
@@ -40,6 +41,7 @@ typedef enum e_error_code
 	EC_OUTFILE,
 	EC_EXECVE,
 	EC_MEM,
+	EC_INIT,
 }	t_error_code;
 
 void	free_cmds(char *full_cmd, char **cmd_args, char *path);
@@ -49,5 +51,6 @@ int		absolute_path(char *cmd);
 int		is_script(char *cmd);
 char	**split_for_parse(char const *s, char c);
 char	*parse_cmd(char *path_var, char *command);
+int		execute(char **av, char **envp, int index);
 
 #endif

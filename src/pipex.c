@@ -6,12 +6,12 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 14:17:27 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/01 18:07:26 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include "../libft_v2/original_src/libft.h"
+//#include "../libft_v2/original_src/libft.h"
 
 char	*parse_cmd(char *path_var, char *command)
 {

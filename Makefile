@@ -1,19 +1,19 @@
 NAME = pipex
+BONUS = pipex-bonus
 LIBFT = libft_v2/libft.a
 LIBFT_DIR = libft_v2
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -I$(LIBFT_DIR)
+CFLAGS = -Wall -Wextra -Werror -g3 -I$(LIBFT_DIR) -Ibonus
 #-fsanitize=address -fno-omit-frame-pointer 
-#-Ibonus
+#creer dossier Includes avec tous les .h
 
 CFILES = src/pipex.c utils/split_for_parse.c utils/utils.c
 
-#BONUS_FILES = bonus/bonus.c bonus/bonus-utils.c \
-		gnl/get_next_line_utils.c gnl/get_next_line.c
+BONUS_FILES = bonus/bonus.c bonus/bonus_utils.c
 
 OBJ = $(CFILES:.c=.o)
-#BONUS_OBJ = $(BONUS_FILES:.c=.o)
+BONUS_OBJ = $(BONUS_FILES:.c=.o)
 
 %.o: %.c
 	@echo "compiling..."
@@ -25,13 +25,18 @@ $(NAME): $(OBJ) $(LIBFT)
 
 $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR)
-	
+
+$(BONUS): $(NAME) $(BONUS_OBJ)
+	@$(CC) $(CFLAGS) $(BONUS_OBJ) -o $(BONUS)
+	@echo "bonus part"
+
 all: $(NAME)
-	
+
+bonus: $(BONUS)
+
 clean:
-	@rm -f $(OBJ)
+	@rm -f $(OBJ) $(BONUS_OBJ)
 	@echo "object files deleted"
-#$(BONUS_OBJ)
 
 fclean: clean
 	@rm -f $(NAME)
