@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:41:50 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 18:38:42 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/02 17:37:31 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	create_pipes(t_bonus *bonus);
 void	read_here_doc(t_bonus *bonus, char **av);
 void	set_infile(t_bonus *bonus, char **av);
 void	set_outfile(t_bonus *bonus, char **av, int ac);
-void	fork_children(t_bonus *bonus, char **av, char **env);
+void	fork_children(t_bonus *bonus, char **av, char **env, int ac);
 void	exec_bonus(t_bonus *bonus, char **av, char **envp, int index);
 void	init_struct(t_bonus *bonus, int ac, int here);
 
