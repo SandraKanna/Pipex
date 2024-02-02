@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 18:02:20 by skanna            #+#    #+#             */
-/*   Updated: 2023/10/25 21:28:07 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/02 12:48:13 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		len = len_s - start;
 	substr = malloc((len + 1) * sizeof(char));
 	if (substr == NULL)
-		return (NULL);
+		exit (1);
 	while (s[start + i] && i < len)
 	{
 		substr[i] = s[start + i];

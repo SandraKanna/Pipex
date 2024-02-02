@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 18:15:22 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/02 15:07:17 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	set_outfile(t_bonus *bonus, char **av, int ac)
 		error_handling(EC_OUTFILE);
 	//dup2(out_file, 1);
 	bonus->pipe_fd[bonus->cmd_count - 1][1] = out_file;
-	close (out_file);
 }
 
 void	set_infile(t_bonus *bonus, char **av)
@@ -71,6 +70,5 @@ void	set_infile(t_bonus *bonus, char **av)
 		bonus->pipe_fd[0][0] = in_file;
 	}
 	//if (!bonus->here_doc)
-	close (in_file);
 	close (bonus->pipe_fd[0][1]);
 }

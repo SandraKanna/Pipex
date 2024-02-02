@@ -33,16 +33,16 @@ $(BONUS): $(BONUS_OBJ) $(LIBFT) $(BONUS_MAIN:.c=.o)
 	@$(CC) $(CFLAGS) $(BONUS_OBJ) $(OBJ) $(BONUS_MAIN:.c=.o) -o $(BONUS) $(LIBFT)
 	@echo "bonus part"
 
-all: $(NAME)
+clean:
+	@rm -f $(OBJ) $(BONUS_OBJ) src/main.o bonus/bonus_main.o
+	@echo "object files deleted"
+
+all: $(NAME) clean
 
 bonus: $(BONUS)
 
-clean:
-	@rm -f $(OBJ) $(BONUS_OBJ)
-	@echo "object files deleted"
-
 fclean: clean
-	@rm -f $(NAME)
+	@rm -f $(NAME) $(BONUS)
 	@make --no-print-directory -C $(LIBFT_DIR) fclean
 	@echo "binaries files deleted"
 
