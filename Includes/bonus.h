@@ -20,22 +20,17 @@ typedef struct s_pipex_bonus
 {
 	int		**pipe_fd;
 	int		cmd_count;
-	int		here_doc;
 	pid_t	*pids;
+	int		here_doc;
+	int		infile_fd;
+	int		outfile_fd;
 }	t_bonus;
 
-// typedef struct s_list
-// {
-// 	char			*content;
-// 	struct s_lst	*next;
-// }					t_list;
-
-void	create_pipes(t_bonus *bonus);
 void	read_here_doc(t_bonus *bonus, char **av);
 void	set_infile(t_bonus *bonus, char **av);
 void	set_outfile(t_bonus *bonus, char **av, int ac);
-void	fork_children(t_bonus *bonus, char **av, char **env, int ac);
-void	exec_bonus(t_bonus *bonus, char **av, char **envp, int index);
-void	init_struct(t_bonus *bonus, int ac, int here);
+void	close_fds(t_bonus *bonus, int current_cmd);
+void	setup_n_exec(t_bonus *bonus, char **av, char **env, int ac);
+void	create_pipes(t_bonus *bonus);
 
 #endif

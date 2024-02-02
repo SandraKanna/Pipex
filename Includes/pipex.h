@@ -25,8 +25,8 @@
 # define ERROR_PIPE "Unable to create pipe"
 # define ERROR_FORK "Error creating child1 process"
 # define ERROR_WAIT "Waitpid returned error"
-# define ERROR_INFILE "Unable to open in_file"
-# define ERROR_OUTFILE "Unable to open or create out_file"
+# define ERROR_INPUT "Input error"
+# define ERROR_OUTFILE "Outfile error"
 # define ERROR_EXECVE "Command not found"
 # define ERROR_MEM "Malloc error"
 # define ERROR_INIT "Unable to initialize pipex structure for the bonus part"
@@ -37,8 +37,8 @@ typedef enum e_error_code
 	EC_PIPE,
 	EC_FORK,
 	EC_WAIT,
-	EC_INFILE,
-	EC_OUTFILE,
+	EC_IN,
+	EC_OUT,
 	EC_EXECVE,
 	EC_MEM,
 	EC_INIT,

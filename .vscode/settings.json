@@ -3,6 +3,8 @@
         "pipex.h": "c",
         "bonus.h": "c",
         "system_error": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "ostream": "c",
+        "*.tcc": "c"
     }
 }

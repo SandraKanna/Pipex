@@ -24,9 +24,9 @@ int	main(int argc, char **argv, char **envp)
 	p_id = fork();
 	if (p_id < 0)
 		error_handling(EC_FORK);
-	else if (p_id == 0) //child
+	else if (p_id == 0)
 		first_cmd(fd, argc, argv, envp);
-	else //parent
+	else
 	{
 		close(fd[1]);
 		second_cmd(fd, argc, argv, envp);

@@ -5,8 +5,6 @@ LIBFT_DIR = libft_v2
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3 -I$(LIBFT_DIR) -IIncludes
-#-fsanitize=address -fno-omit-frame-pointer 
-#creer dossier Includes avec tous les .h
 
 CFILES = src/pipex.c src/utils/split_for_parse.c src/utils/utils.c
 
@@ -24,20 +22,20 @@ BONUS_OBJ = $(BONUS_FILES:.c=.o)
 
 $(NAME): $(OBJ) $(LIBFT) $(MAIN:.c=.o)
 	@$(CC) $(CFLAGS) $(OBJ) $(MAIN:.c=.o) -o $(NAME) $(LIBFT)
-	@echo "done!"
+	@echo "---You can execute the mandatory part---"
 
 $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR)
 
-$(BONUS): $(BONUS_OBJ) $(LIBFT) $(BONUS_MAIN:.c=.o)
+$(BONUS): $(BONUS_OBJ) $(OBJ) $(LIBFT) $(BONUS_MAIN:.c=.o)
 	@$(CC) $(CFLAGS) $(BONUS_OBJ) $(OBJ) $(BONUS_MAIN:.c=.o) -o $(BONUS) $(LIBFT)
-	@echo "bonus part"
+	@echo "---You can execute the bonus part---"
 
 clean:
 	@rm -f $(OBJ) $(BONUS_OBJ) src/main.o bonus/bonus_main.o
 	@echo "object files deleted"
 
-all: $(NAME) clean
+all: $(NAME)
 
 bonus: $(BONUS)
 
@@ -47,8 +45,5 @@ fclean: clean
 	@echo "binaries files deleted"
 
 re: fclean all
-
-#bonus: clean
-#$(CC) $(CFLAGS) $(OBJ) $(BONUS_FILES) -o $(NAME)
 
 .PHONY: all clean fclean re bonus

@@ -95,7 +95,7 @@ void	second_cmd(int *fd, int ac, char **av, char **envp)
 	close(fd[1]);
 	out_file = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (out_file < 0)
-		error_handling(EC_OUTFILE);
+		error_handling(EC_OUT);
 	dup2(out_file, 1);
 	dup2(fd[0], 0);
 	close(fd[0]);
@@ -113,7 +113,7 @@ void	first_cmd(int *fd, int ac, char **av, char **envp)
 	close(fd[0]);
 	in_file = open(av[ac - 4], O_RDONLY);
 	if (in_file < 0)
-		error_handling(EC_INFILE);
+		error_handling(EC_IN);
 	dup2(in_file, 0);
 	close (in_file);
 	dup2(fd[1], 1);

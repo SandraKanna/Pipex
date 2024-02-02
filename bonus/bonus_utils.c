@@ -38,32 +38,39 @@ void	read_here_doc(t_bonus *bonus, char **av)
 			error_handling(EC_INIT);
 	}
 	close(hd_pipe[1]);
-	bonus->pipe_fd[0][0] = hd_pipe[0];
+	bonus->infile_fd = hd_pipe[0];
 }
 
 void	set_outfile(t_bonus *bonus, char **av, int ac)
 {
-	int		out_file;
-
-	out_file = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
-	if (out_file < 0)
-		error_handling(EC_OUTFILE);
-	bonus->pipe_fd[bonus->cmd_count - 1][1] = out_file;//Open file descriptor 4: outfile
+	bonus->outfile_fd = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
+	if (bonus->outfile_fd < 0)
+		error_handling(EC_OUT);
 }
 
 void	set_infile(t_bonus *bonus, char **av)
 {
-	int		in_file;
-
-	in_file = 0;
 	if (bonus->here_doc)
 		read_here_doc(bonus, av);
 	else
 	{
-		in_file = open (av[1], O_RDONLY);//Open file descriptor 5: infile.txt
-		if (in_file < 0)
-			error_handling(EC_INFILE);
-		bonus->pipe_fd[0][0] = in_file;
+		bonus->infile_fd = open(av[1], O_RDONLY);
+		if (bonus->infile_fd < 0)
+			error_handling(EC_IN);
 	}
-	close (bonus->pipe_fd[0][1]);
+}
+
+void	close_fds(t_bonus *bonus, int current_cmd)
+{
+	int	i;
+
+	i = 0;
+	while (i < bonus->cmd_count - 1)
+	{
+		if (i != current_cmd - 1)
+			close(bonus->pipe_fd[i][0]);
+		if (i != current_cmd)
+			close(bonus->pipe_fd[i][1]);
+		i++;
+	}
 }

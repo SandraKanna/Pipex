@@ -16,7 +16,7 @@
 int	error_handling(t_error_code error_code)
 {
 	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE, ERROR_FORK,
-		ERROR_WAIT, ERROR_INFILE, ERROR_OUTFILE, ERROR_EXECVE,
+		ERROR_WAIT, ERROR_INPUT, ERROR_OUTFILE, ERROR_EXECVE,
 		ERROR_MEM, ERROR_INIT};
 
 	perror(error_code[error_msg]);
