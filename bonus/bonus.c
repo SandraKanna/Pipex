@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bonus.h"
+#include "../Includes/bonus.h"
 
 //https://github.com/mcombeau/pipex
 
@@ -96,29 +96,4 @@ void	init_struct(t_bonus *bonus, int ac, int here)
 			error_handling(EC_MEM);
 		i++;
 	}
-}
-
-int	main(int ac, char **av, char **envp)
-{
-	t_bonus	bonus;
-	int		i;
-	int		wstatus;
-
-	if (ac < 5)
-		error_handling(EC_ARGS);
-	bonus.here_doc = (ft_strcmp(av[1], "here_doc") == 0);
-	init_struct(&bonus, ac, bonus.here_doc);
-	create_pipes(&bonus);
-	set_infile(&bonus, av);
-	set_outfile(&bonus, av, ac);
-	fork_children(&bonus, av, envp);
-	//execute_parent();
-	i = 0;
-	while (i < bonus.cmd_count)
-	{
-		if (waitpid(bonus.pids[i], &wstatus, 0) == -1)
-			error_handling(EC_WAIT);
-		i++;
-	}
-	return (0);
 }

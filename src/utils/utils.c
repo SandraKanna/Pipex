@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../src/pipex.h"
+#include "../../Includes/pipex.h"
 //#include "../libft_v2/original_src/libft.h"
 
 int	error_handling(t_error_code error_code)
@@ -34,26 +34,6 @@ int	is_script(char *cmd)
 	if (cmd_len > 3 && ft_strcmp(cmd + cmd_len - 3, ".sh") == 0)
 		return (1);
 	return (0);
-}
-
-char	*get_path_var(char **envp)
-{
-	int		i;
-	char	*path;
-
-	i = 0;
-	path = NULL;
-	while (envp[i])
-	{
-		if (ft_strnstr((const char *)envp[i], "PATH=", 5))
-		{
-			path = ft_strdup((const char *)envp[i] + 5);
-			if (!path)
-				return (NULL);
-		}
-		i++;
-	}
-	return (path);
 }
 
 int	absolute_path(char *cmd)

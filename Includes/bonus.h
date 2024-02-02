@@ -13,7 +13,7 @@
 #ifndef BONUS_H
 # define BONUS_H
 
-# include "../src/pipex.h"
+# include "pipex.h"
 # include "../libft_v2/gnl_src/get_next_line.h"
 
 typedef struct s_pipex_bonus
@@ -34,6 +34,8 @@ void	create_pipes(t_bonus *bonus);
 void	read_here_doc(t_bonus *bonus, char **av);
 void	set_infile(t_bonus *bonus, char **av);
 void	set_outfile(t_bonus *bonus, char **av, int ac);
-void	execute_children(t_bonus *bonus, char **av, char **env, int hd);
+void	fork_children(t_bonus *bonus, char **av, char **env);
+void	exec_bonus(t_bonus *bonus, char **av, char **envp, int index);
+void	init_struct(t_bonus *bonus, int ac, int here);
 
 #endif

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bonus.h"
+#include "../Includes/bonus.h"
 
 void	read_here_doc(t_bonus *bonus, char **av)
 {
@@ -57,6 +57,7 @@ void	set_infile(t_bonus *bonus, char **av)
 {
 	int		in_file;
 
+	in_file = 0;
 	if (bonus->here_doc)
 	{
 		read_here_doc(bonus, av);
@@ -70,6 +71,6 @@ void	set_infile(t_bonus *bonus, char **av)
 		bonus->pipe_fd[0][0] = in_file;
 	}
 	//if (!bonus->here_doc)
-		close (in_file);
+	close (in_file);
 	close (bonus->pipe_fd[0][1]);
 }

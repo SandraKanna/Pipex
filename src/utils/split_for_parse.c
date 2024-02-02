@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../src/pipex.h"
+#include "../../Includes/pipex.h"
 //#include "../libft_v2/original_src/libft.h"
 
 static int	count_args(char const *s, char c, int q)

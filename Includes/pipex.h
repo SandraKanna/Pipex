@@ -52,5 +52,7 @@ int		is_script(char *cmd);
 char	**split_for_parse(char const *s, char c);
 char	*parse_cmd(char *path_var, char *command);
 int		execute(char **av, char **envp, int index);
+void	second_cmd(int *fd, int ac, char **av, char **envp);
+void	first_cmd(int *fd, int ac, char **av, char **envp);
 
 #endif
