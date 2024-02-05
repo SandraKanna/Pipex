@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 18:07:26 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:44:05 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,11 @@ void	second_cmd(int *fd, int ac, char **av, char **envp)
 	if (out_file < 0)
 		error_handling(EC_OUT);
 	dup2(out_file, 1);
+	close (out_file);
 	dup2(fd[0], 0);
 	close(fd[0]);
 	if (!execute(av, envp, ac - 2))
-	{
-		close (out_file);
 		error_handling(EC_EXECVE);
-	}
 }
 
 void	first_cmd(int *fd, int ac, char **av, char **envp)

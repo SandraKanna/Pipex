@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/02 18:03:39 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/05 19:04:04 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,7 @@ void	setup_n_exec(t_bonus *bonus, char **av, char **env, int ac)
 		}
 		i++;
 	}
-	i = 0;
-	while (i < bonus->cmd_count)
-	{
-		close (bonus->pipe_fd[i][0]);
-		close (bonus->pipe_fd[i++][1]);
-	}
+	close_fds(bonus, i);
 }
 
 void	create_pipes(t_bonus *bonus)

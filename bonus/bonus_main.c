@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/02 18:03:37 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/05 18:59:28 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ int	main(int ac, char **av, char **envp)
 			error_handling(EC_WAIT);
 		i++;
 	}
-	free (bonus.pids);
+	i = 0;
+	while (i < bonus.cmd_count && bonus.pipe_fd[i])
+		free(bonus.pipe_fd[i++]);
+	free(bonus.pipe_fd);
+	free(bonus.pids);
+	close(bonus.infile_fd);
+	close(bonus.outfile_fd);
 	return (0);
 }

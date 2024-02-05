@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/02 17:50:44 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/05 18:59:29 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void	read_here_doc(t_bonus *bonus, char **av)
 	while (limiter == 0)
 	{
 		line = get_next_line(STDIN_FILENO);
-		if (!line || ft_strcmp(line, av[2]) == 0)
+		if (!line || ft_strncmp(line, av[2], ft_strlen(av[2])) == 0)
 		{
 			free(line);
 			limiter = 1;
 		}
-		else if (line && ft_strcmp(line, av[2]) != 0)
+		else if (line && ft_strncmp(line, av[2], ft_strlen(av[2])) != 0)
 		{
 			write(hd_pipe[1], line, ft_strlen(line));
 			free(line);
