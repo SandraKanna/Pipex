@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 18:15:59 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/06 12:03:12 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	*get_path_var(char **envp);
 int		absolute_path(char *cmd);
 int		is_script(char *cmd);
 char	**split_for_parse(char const *s, char c);
+char	*build_path(char *path, char *command);
 char	*parse_cmd(char *path_var, char *command);
 int		execute(char **av, char **envp, int index);
 void	second_cmd(int *fd, int ac, char **av, char **envp);
