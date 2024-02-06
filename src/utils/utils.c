@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:48 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/01 18:16:23 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/06 19:05:29 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	error_handling(t_error_code error_code)
 	const char	*error_msg[] = {ERROR_ARGS, ERROR_PIPE, ERROR_FORK,
 		ERROR_WAIT, ERROR_INPUT, ERROR_OUTFILE, ERROR_EXECVE,
 		ERROR_MEM, ERROR_INIT};
-
+//add free struct before exit
 	perror(error_code[error_msg]);
 	if (error_code == EC_EXECVE)
 		exit(127);

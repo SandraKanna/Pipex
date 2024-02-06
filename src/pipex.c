@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:33:35 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/06 14:14:41 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/06 19:05:28 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*build_path(char *path, char *command)
 		return (NULL);
 	if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
 		return (path);
-	return (NULL);
+	return (free(path), NULL);
 }
 
 char	*parse_cmd(char *path_var, char *command)
@@ -69,8 +69,7 @@ char	*parse_cmd(char *path_var, char *command)
 		free (full_path);
 		i++;
 	}
-	if (split_path[i])
-		free_split(split_path);
+	free_split(split_path);
 	return (NULL);
 }
 

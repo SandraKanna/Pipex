@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/06 11:39:10 by skanna           ###   ########.fr       */
+/*   Updated: 2024/02/06 19:07:15 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	read_here_doc(t_bonus *bonus, char **av)
 		line = get_next_line(STDIN_FILENO);
 		if (!line || ft_strncmp(line, av[2], ft_strlen(av[2])) == 0)
 		{
+			//cree fonction max(ft_strlen(line), ft_strlen(av[2])))
+			//prendre la longueur la plus grande, on doit trouver le limiter tout seul dans la ligne sinon on sort pas
 			free(line);
 			limiter = 1;
 		}
@@ -43,7 +45,7 @@ void	read_here_doc(t_bonus *bonus, char **av)
 
 void	set_outfile(t_bonus *bonus, char **av, int ac)
 {
-	bonus->outfile_fd = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0777);
+	bonus->outfile_fd = open(av[ac - 1], O_RDWR | O_APPEND | O_CREAT, 0777);
 	if (bonus->outfile_fd < 0)
 		error_handling(EC_OUT);
 }
