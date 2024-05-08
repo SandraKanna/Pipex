@@ -1,5 +1,5 @@
 NAME = pipex
-BONUS= pipex_bonus
+BONUS = pipex_bonus
 LIBFT = libft_v2/libft.a
 LIBFT_DIR = libft_v2
 
