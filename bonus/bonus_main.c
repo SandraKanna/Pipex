@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/06 19:30:23 by skanna           ###   ########.fr       */
+/*   Updated: 2024/06/06 23:01:44 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int ac, char **av, char **envp)
 		if (waitpid(bonus.pids[i], &wstatus, 0) == -1)
 			error_handling(EC_WAIT);
 		i++;
-	} //pas besoin de la boucle wait, juste un wait apres la dereniere execution devrait suffire
+	}
 	i = 0;
 	while (i < bonus.cmd_count && bonus.pipe_fd[i])
 		free(bonus.pipe_fd[i++]);

@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:43:27 by skanna            #+#    #+#             */
-/*   Updated: 2024/02/06 19:07:15 by skanna           ###   ########.fr       */
+/*   Updated: 2024/06/07 00:00:17 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Includes/bonus.h"
+
+static int	process_input_line(int *hd_pipe, char *line, const char *del)
+{
+	size_t	line_len;
+	size_t	del_len;
+
+	line_len = ft_strlen(line);
+	del_len = ft_strlen(del);
+	if (line_len > 0 && line[line_len - 1] == '\n')
+	{
+		line[line_len - 1] = '\0';
+		line_len--;
+	}
+	if (ft_strncmp(line, del, del_len) == 0 && line_len == del_len)
+	{
+		free(line);
+		return (1);
+	}
+	line[line_len] = '\n';
+	line_len++;
+	write(hd_pipe[1], line, line_len);
+	free(line);
+	return (0);
+}
 
 void	read_here_doc(t_bonus *bonus, char **av)
 {
@@ -24,20 +48,10 @@ void	read_here_doc(t_bonus *bonus, char **av)
 	while (limiter == 0)
 	{
 		line = get_next_line(STDIN_FILENO);
-		if (!line || ft_strncmp(line, av[2], ft_strlen(av[2])) == 0)
-		{
-			//cree fonction max(ft_strlen(line), ft_strlen(av[2])))
-			//prendre la longueur la plus grande, on doit trouver le limiter tout seul dans la ligne sinon on sort pas
-			free(line);
+		if (!line)
 			limiter = 1;
-		}
-		else if (line && ft_strncmp(line, av[2], ft_strlen(av[2])) != 0)
-		{
-			write(hd_pipe[1], line, ft_strlen(line));
-			free(line);
-		}
 		else
-			error_handling(EC_INIT);
+			limiter = process_input_line(hd_pipe, line, av[2]);
 	}
 	close(hd_pipe[1]);
 	bonus->infile_fd = hd_pipe[0];
